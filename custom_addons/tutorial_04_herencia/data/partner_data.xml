@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Autores de ejemplo -->
+    <record id="autor_cervantes" model="res.partner">
+        <field name="name">Miguel de Cervantes</field>
+        <field name="es_autor" eval="True"/>
+        <field name="nacionalidad">España</field>
+        <field name="fecha_nacimiento">1547-09-29</field>
+        <field name="fecha_fallecimiento">1616-04-22</field>
+        <field name="genero_literario">novela</field>
+        <field name="biografia">Escritor español, autor de Don Quijote de la Mancha.</field>
+    </record>
+
+    <record id="autor_gabo" model="res.partner">
+        <field name="name">Gabriel García Márquez</field>
+        <field name="es_autor" eval="True"/>
+        <field name="nacionalidad">Colombia</field>
+        <field name="fecha_nacimiento">1927-03-06</field>
+        <field name="fecha_fallecimiento">2014-04-17</field>
+        <field name="genero_literario">novela</field>
+        <field name="biografia">Premio Nobel de Literatura 1982. Máximo exponente del realismo mágico.</field>
+    </record>
+
+    <record id="autor_cortazar" model="res.partner">
+        <field name="name">Julio Cortázar</field>
+        <field name="es_autor" eval="True"/>
+        <field name="nacionalidad">Argentina</field>
+        <field name="fecha_nacimiento">1914-08-26</field>
+        <field name="fecha_fallecimiento">1984-02-12</field>
+        <field name="genero_literario">cuento</field>
+        <field name="biografia">Escritor e intelectual argentino, maestro del cuento corto.</field>
+    </record>
+
+    <record id="autor_borges" model="res.partner">
+        <field name="name">Jorge Luis Borges</field>
+        <field name="es_autor" eval="True"/>
+        <field name="nacionalidad">Argentina</field>
+        <field name="fecha_nacimiento">1899-08-24</field>
+        <field name="fecha_fallecimiento">1986-06-14</field>
+        <field name="genero_literario">cuento</field>
+        <field name="biografia">Uno de los autores más destacados de la literatura del siglo XX.</field>
+    </record>
+
+    <!-- Secuencia para socios -->
+    <record id="seq_biblioteca_socio" model="ir.sequence">
+        <field name="name">Socio de Biblioteca</field>
+        <field name="code">biblioteca.socio</field>
+        <field name="prefix">SOC-</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

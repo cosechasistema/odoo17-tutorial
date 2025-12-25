@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    VISTAS DE LIBRO - Tutorial 01
+
+    Las vistas definen cómo se muestra la información en la interfaz.
+    Hay varios tipos de vistas: form, tree, kanban, calendar, graph, etc.
+    -->
+
+    <!-- ============================================================ -->
+    <!-- VISTA TREE (LISTA)                                            -->
+    <!-- ============================================================ -->
+    <!--
+    La vista tree muestra los registros en formato tabla/lista.
+    Es lo primero que ve el usuario al abrir el menú.
+    -->
+    <record id="view_biblioteca_libro_tree" model="ir.ui.view">
+        <field name="name">biblioteca.libro.tree</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="arch" type="xml">
+            <!--
+            Atributos de tree:
+            - decoration-*: colorea filas según condiciones
+            - default_order: orden por defecto
+            - editable: permite editar en línea ("top" o "bottom")
+            -->
+            <tree string="Libros"
+                  decoration-danger="estado == 'prestado'"
+                  decoration-warning="estado == 'mantenimiento'"
+                  decoration-muted="not disponible"
+                  default_order="name asc">
+
+                <!-- Campos a mostrar en la lista -->
+                <field name="name"/>
+                <field name="isbn"/>
+                <field name="autor"/>
+                <field name="paginas"/>
+                <field name="precio" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                <!--
+                Widget badge: muestra el estado como etiqueta coloreada
+                decoration-*: colores según el valor
+                -->
+                <field name="estado"
+                       widget="badge"
+                       decoration-success="estado == 'disponible'"
+                       decoration-danger="estado == 'prestado'"
+                       decoration-warning="estado == 'reservado'"
+                       decoration-info="estado == 'mantenimiento'"/>
+
+                <field name="disponible" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- VISTA FORM (FORMULARIO)                                       -->
+    <!-- ============================================================ -->
+    <!--
+    La vista form muestra un registro individual para ver/editar.
+    -->
+    <record id="view_biblioteca_libro_form" model="ir.ui.view">
+        <field name="name">biblioteca.libro.form</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="arch" type="xml">
+            <form string="Libro">
+                <!--
+                HEADER: Barra superior con botones y estado
+                -->
+                <header>
+                    <!--
+                    Botones de acción:
+                    - name: nombre del método Python a ejecutar
+                    - type="object": ejecuta un método del modelo
+                    - class: estilo del botón (btn-primary, btn-secondary, etc.)
+                    - invisible: condición para ocultar el botón
+                    -->
+                    <button name="action_marcar_prestado"
+                            string="Marcar Prestado"
+                            type="object"
+                            class="btn-primary"
+                            invisible="estado != 'disponible'"/>
+
+                    <button name="action_marcar_disponible"
+                            string="Marcar Disponible"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="estado == 'disponible'"/>
+
+                    <!--
+                    Widget statusbar: muestra el estado como barra de progreso
+                    statusbar_visible: estados a mostrar (oculta los demás)
+                    -->
+                    <field name="estado"
+                           widget="statusbar"
+                           statusbar_visible="disponible,prestado,reservado"/>
+                </header>
+
+                <!--
+                SHEET: Contenido principal del formulario
+                -->
+                <sheet>
+                    <!--
+                    Imagen/Avatar en la esquina superior derecha
+                    -->
+                    <field name="portada" widget="image" class="oe_avatar"/>
+
+                    <!--
+                    Título principal con estilo destacado
+                    -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Título del libro..."/>
+                        </h1>
+                        <h3>
+                            <field name="autor" placeholder="Autor..."/>
+                        </h3>
+                    </div>
+
+                    <!--
+                    GROUPS: Organiza campos en columnas
+                    Un <group> divide en 2 columnas por defecto
+                    -->
+                    <group>
+                        <group string="Información General">
+                            <field name="isbn"/>
+                            <field name="editorial"/>
+                            <field name="fecha_publicacion"/>
+                            <field name="paginas"/>
+                        </group>
+                        <group string="Precio y Disponibilidad">
+                            <field name="precio"/>
+                            <field name="disponible"/>
+                        </group>
+                    </group>
+
+                    <!--
+                    NOTEBOOK: Pestañas para organizar más información
+                    -->
+                    <notebook>
+                        <page string="Descripción" name="descripcion">
+                            <field name="descripcion"
+                                   placeholder="Escribe una descripción o sinopsis del libro..."/>
+                        </page>
+                        <page string="Información Adicional" name="info">
+                            <!--
+                            Información de auditoría (quién creó/modificó)
+                            Estos campos existen automáticamente en todos los modelos
+                            -->
+                            <group>
+                                <group string="Creación">
+                                    <field name="create_uid" readonly="1"/>
+                                    <field name="create_date" readonly="1"/>
+                                </group>
+                                <group string="Última Modificación">
+                                    <field name="write_uid" readonly="1"/>
+                                    <field name="write_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- VISTA SEARCH (BÚSQUEDA Y FILTROS)                            -->
+    <!-- ============================================================ -->
+    <!--
+    Define los campos de búsqueda, filtros predefinidos y agrupaciones.
+    -->
+    <record id="view_biblioteca_libro_search" model="ir.ui.view">
+        <field name="name">biblioteca.libro.search</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Libros">
+                <!--
+                Campos de búsqueda: el usuario puede escribir para buscar
+                filter_domain: define cómo buscar (aquí busca en nombre O autor)
+                -->
+                <field name="name"
+                       string="Título/Autor"
+                       filter_domain="['|', ('name', 'ilike', self), ('autor', 'ilike', self)]"/>
+                <field name="isbn"/>
+                <field name="editorial"/>
+
+                <!--
+                SEPARATOR: línea divisoria visual
+                -->
+                <separator/>
+
+                <!--
+                FILTROS: búsquedas predefinidas con un clic
+                domain: condición de filtrado
+                -->
+                <filter string="Disponibles"
+                        name="filter_disponibles"
+                        domain="[('disponible', '=', True)]"/>
+                <filter string="Prestados"
+                        name="filter_prestados"
+                        domain="[('estado', '=', 'prestado')]"/>
+                <filter string="En Mantenimiento"
+                        name="filter_mantenimiento"
+                        domain="[('estado', '=', 'mantenimiento')]"/>
+
+                <separator/>
+
+                <!--
+                Filtro de fecha con contexto dinámico
+                -->
+                <filter string="Publicados Este Año"
+                        name="filter_este_anio"
+                        domain="[('fecha_publicacion', '>=', (context_today() - relativedelta(day=1, month=1)).strftime('%Y-%m-%d'))]"/>
+
+                <!--
+                AGRUPACIONES: agrupar registros por campo
+                -->
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Estado"
+                            name="group_estado"
+                            context="{'group_by': 'estado'}"/>
+                    <filter string="Autor"
+                            name="group_autor"
+                            context="{'group_by': 'autor'}"/>
+                    <filter string="Editorial"
+                            name="group_editorial"
+                            context="{'group_by': 'editorial'}"/>
+                    <filter string="Fecha de Publicación"
+                            name="group_fecha"
+                            context="{'group_by': 'fecha_publicacion:year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- VISTA KANBAN (TARJETAS)                                      -->
+    <!-- ============================================================ -->
+    <!--
+    Vista de tarjetas estilo Trello, útil para gestión visual.
+    -->
+    <record id="view_biblioteca_libro_kanban" model="ir.ui.view">
+        <field name="name">biblioteca.libro.kanban</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" class="o_kanban_small_column">
+                <!--
+                Campos que necesitamos en la tarjeta
+                (aunque no se muestren directamente)
+                -->
+                <field name="name"/>
+                <field name="autor"/>
+                <field name="isbn"/>
+                <field name="estado"/>
+                <field name="disponible"/>
+                <field name="portada"/>
+
+                <!--
+                Template de cada tarjeta usando QWeb
+                -->
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <field name="portada"
+                                       widget="image"
+                                       options="{'preview_image': 'portada', 'size': [80, 80]}"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="autor"/>
+                                </div>
+                                <div>
+                                    <span class="badge rounded-pill"
+                                          t-att-class="record.disponible.raw_value ? 'text-bg-success' : 'text-bg-danger'">
+                                        <t t-if="record.disponible.raw_value">Disponible</t>
+                                        <t t-else="">No disponible</t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

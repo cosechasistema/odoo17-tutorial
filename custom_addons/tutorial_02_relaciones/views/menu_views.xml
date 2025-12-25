@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    MENÚS ADICIONALES - Tutorial 02
+
+    Agrega nuevos menús al módulo de biblioteca existente.
+    -->
+
+    <!-- Submenú de Gestión -->
+    <menuitem id="menu_biblioteca_gestion"
+              name="Gestión"
+              parent="tutorial_01_basico.menu_biblioteca_root"
+              sequence="20"/>
+
+    <!-- Menú de Miembros -->
+    <menuitem id="menu_biblioteca_miembro"
+              name="Miembros"
+              parent="menu_biblioteca_gestion"
+              action="action_biblioteca_miembro"
+              sequence="10"/>
+
+    <!-- Menú de Préstamos -->
+    <menuitem id="menu_biblioteca_prestamo"
+              name="Préstamos"
+              parent="menu_biblioteca_gestion"
+              action="action_biblioteca_prestamo"
+              sequence="20"/>
+
+    <!-- Submenú de Configuración -->
+    <menuitem id="menu_biblioteca_config"
+              name="Configuración"
+              parent="tutorial_01_basico.menu_biblioteca_root"
+              sequence="100"/>
+
+    <!-- Menú de Categorías -->
+    <menuitem id="menu_biblioteca_categoria"
+              name="Categorías"
+              parent="menu_biblioteca_config"
+              action="action_biblioteca_categoria"
+              sequence="10"/>
+
+</odoo>

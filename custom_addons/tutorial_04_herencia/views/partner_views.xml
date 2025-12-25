@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    HERENCIA DE VISTAS - Tutorial 04
+
+    Demuestra cómo extender vistas existentes usando XPath.
+    -->
+
+    <!-- Extender formulario de contacto -->
+    <record id="view_partner_form_inherit_autor" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.biblioteca</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar checkbox de autor en la parte superior -->
+            <xpath expr="//field[@name='category_id']" position="before">
+                <field name="es_autor"/>
+            </xpath>
+
+            <!-- Agregar botón de estadísticas -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_ver_libros"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        invisible="not es_autor">
+                    <field name="libro_count" widget="statinfo" string="Libros"/>
+                </button>
+            </xpath>
+
+            <!-- Agregar pestaña de información de autor -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Información de Autor" name="autor_info"
+                      invisible="not es_autor">
+                    <group>
+                        <group string="Datos Biográficos">
+                            <field name="nacionalidad"/>
+                            <field name="fecha_nacimiento"/>
+                            <field name="fecha_fallecimiento"/>
+                            <field name="genero_literario"/>
+                        </group>
+                        <group string="Biografía">
+                            <field name="biografia" nolabel="1"/>
+                        </group>
+                    </group>
+                    <group string="Libros Publicados">
+                        <field name="libro_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="isbn"/>
+                                <field name="fecha_publicacion"/>
+                                <field name="estado"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extender vista de lista de contactos -->
+    <record id="view_partner_tree_inherit_autor" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit.biblioteca</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="es_autor" optional="show"/>
+                <field name="libro_count" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extender búsqueda de contactos -->
+    <record id="view_partner_search_inherit_autor" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.biblioteca</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <separator/>
+                <filter string="Autores"
+                        name="filter_autores"
+                        domain="[('es_autor', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Acción para ver solo autores -->
+    <record id="action_biblioteca_autores" model="ir.actions.act_window">
+        <field name="name">Autores</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('es_autor', '=', True)]</field>
+        <field name="context">{'default_es_autor': True}</field>
+    </record>
+
+    <!-- Menú de autores -->
+    <menuitem id="menu_biblioteca_autores"
+              name="Autores"
+              parent="tutorial_01_basico.menu_biblioteca_catalogo"
+              action="action_biblioteca_autores"
+              sequence="40"/>
+
+</odoo>

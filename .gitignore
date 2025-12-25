@@ -1,0 +1,25 @@
+# Datos de PostgreSQL (no versionar)
+postgres_data/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Archivos de Odoo
+*.pyc
+filestore/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

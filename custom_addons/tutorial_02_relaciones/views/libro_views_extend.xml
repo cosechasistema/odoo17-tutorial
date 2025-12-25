@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    HERENCIA DE VISTAS - Tutorial 02
+
+    Extiende las vistas del módulo tutorial_01_basico
+    para agregar los nuevos campos y relaciones.
+    -->
+
+    <!-- Extender vista Form de Libro -->
+    <record id="view_biblioteca_libro_form_inherit" model="ir.ui.view">
+        <field name="name">biblioteca.libro.form.inherit.relaciones</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="inherit_id" ref="tutorial_01_basico.view_biblioteca_libro_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar botones de estadísticas -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_ver_prestamos"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-history">
+                    <field name="prestamo_count" widget="statinfo" string="Préstamos"/>
+                </button>
+                <button name="action_crear_prestamo"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-plus"
+                        invisible="not disponible">
+                    <span>Nuevo Préstamo</span>
+                </button>
+            </xpath>
+
+            <!-- Si no existe button_box, crearlo -->
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="button_box" position="move"/>
+            </xpath>
+
+            <!-- Agregar campo de categorías después del grupo de información -->
+            <xpath expr="//group/group[@string='Información General']" position="after">
+                <group string="Clasificación">
+                    <field name="categoria_ids" widget="many2many_tags"
+                           options="{'color_field': 'color'}"/>
+                </group>
+            </xpath>
+
+            <!-- Agregar información de préstamo actual si está prestado -->
+            <xpath expr="//group/group[@string='Precio y Disponibilidad']" position="inside">
+                <field name="prestado_a" invisible="disponible"/>
+            </xpath>
+
+            <!-- Agregar pestaña de historial de préstamos -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Historial de Préstamos" name="prestamos">
+                    <field name="prestamo_ids" readonly="1">
+                        <tree decoration-danger="estado == 'vencido'"
+                              decoration-success="estado == 'devuelto'">
+                            <field name="miembro_id"/>
+                            <field name="fecha_prestamo"/>
+                            <field name="fecha_devolucion_esperada"/>
+                            <field name="fecha_devolucion_real"/>
+                            <field name="dias_retraso"/>
+                            <field name="estado" widget="badge"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extender vista Tree de Libro -->
+    <record id="view_biblioteca_libro_tree_inherit" model="ir.ui.view">
+        <field name="name">biblioteca.libro.tree.inherit.relaciones</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="inherit_id" ref="tutorial_01_basico.view_biblioteca_libro_tree"/>
+        <field name="arch" type="xml">
+            <!-- Agregar columna de préstamos después del estado -->
+            <xpath expr="//field[@name='estado']" position="after">
+                <field name="prestamo_count"/>
+                <field name="prestado_a" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extender vista Search de Libro -->
+    <record id="view_biblioteca_libro_search_inherit" model="ir.ui.view">
+        <field name="name">biblioteca.libro.search.inherit.relaciones</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="inherit_id" ref="tutorial_01_basico.view_biblioteca_libro_search"/>
+        <field name="arch" type="xml">
+            <!-- Agregar campo de búsqueda por categoría -->
+            <xpath expr="//field[@name='editorial']" position="after">
+                <field name="categoria_ids"/>
+            </xpath>
+
+            <!-- Agregar filtro de libros con préstamos -->
+            <xpath expr="//filter[@name='filter_mantenimiento']" position="after">
+                <separator/>
+                <filter string="Con Préstamos Activos"
+                        name="filter_con_prestamos"
+                        domain="[('prestamo_ids.estado', '=', 'activo')]"/>
+            </xpath>
+
+            <!-- Agregar agrupación por categoría -->
+            <xpath expr="//filter[@name='group_editorial']" position="after">
+                <filter string="Categoría"
+                        name="group_categoria"
+                        context="{'group_by': 'categoria_ids'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_biblioteca_inventario"
+              name="Inventario"
+              parent="tutorial_02_relaciones.menu_biblioteca_gestion"
+              action="action_biblioteca_inventario"
+              sequence="30"/>
+</odoo>

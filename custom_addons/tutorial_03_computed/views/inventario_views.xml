@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_biblioteca_inventario_tree" model="ir.ui.view">
+        <field name="name">biblioteca.inventario.tree</field>
+        <field name="model">biblioteca.inventario</field>
+        <field name="arch" type="xml">
+            <tree string="Inventario"
+                  decoration-danger="nivel_stock == 'critico'"
+                  decoration-warning="nivel_stock == 'bajo'">
+                <field name="libro_id"/>
+                <field name="stock_inicial"/>
+                <field name="entradas"/>
+                <field name="salidas"/>
+                <field name="stock_total"/>
+                <field name="prestados"/>
+                <field name="stock_disponible"/>
+                <field name="valor_inventario" sum="Total"/>
+                <field name="nivel_stock" widget="badge"
+                       decoration-danger="nivel_stock == 'critico'"
+                       decoration-warning="nivel_stock == 'bajo'"
+                       decoration-success="nivel_stock in ('normal', 'alto')"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_biblioteca_inventario_form" model="ir.ui.view">
+        <field name="name">biblioteca.inventario.form</field>
+        <field name="model">biblioteca.inventario</field>
+        <field name="arch" type="xml">
+            <form string="Inventario">
+                <header>
+                    <button name="action_agregar_stock"
+                            string="+ Agregar Stock"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="action_registrar_baja"
+                            string="- Registrar Baja"
+                            type="object"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Libro">
+                            <field name="libro_id"/>
+                        </group>
+                        <group string="Stock">
+                            <field name="stock_inicial"/>
+                            <field name="entradas"/>
+                            <field name="salidas"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Calculados">
+                            <field name="stock_total" readonly="1"/>
+                            <field name="prestados" readonly="1"/>
+                            <field name="stock_disponible" readonly="1"/>
+                        </group>
+                        <group string="Valor">
+                            <field name="valor_inventario" readonly="1"/>
+                            <field name="porcentaje_prestado"/>
+                            <field name="nivel_stock" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_biblioteca_inventario" model="ir.actions.act_window">
+        <field name="name">Inventario</field>
+        <field name="res_model">biblioteca.inventario</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

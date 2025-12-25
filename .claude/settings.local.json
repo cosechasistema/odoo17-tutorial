@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "postgres-odoo": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network", "host",
+        "-e", "DATABASE_URI",
+        "crystaldba/postgres-mcp",
+        "--access-mode=unrestricted"
+      ],
+      "env": {
+        "DATABASE_URI": "postgresql://odoo:odoo@localhost:5433/postgres"
+      }
+    }
+  }
+}

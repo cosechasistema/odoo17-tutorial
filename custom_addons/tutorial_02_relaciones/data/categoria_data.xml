@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categorías de ejemplo -->
+    <record id="categoria_novela" model="biblioteca.categoria">
+        <field name="name">Novela</field>
+        <field name="descripcion">Obras de ficción narrativa extensa</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="categoria_poesia" model="biblioteca.categoria">
+        <field name="name">Poesía</field>
+        <field name="descripcion">Obras en verso y prosa poética</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="categoria_ensayo" model="biblioteca.categoria">
+        <field name="name">Ensayo</field>
+        <field name="descripcion">Textos de análisis y reflexión</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="categoria_clasico" model="biblioteca.categoria">
+        <field name="name">Clásico</field>
+        <field name="descripcion">Obras fundamentales de la literatura</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="categoria_latinoamericano" model="biblioteca.categoria">
+        <field name="name">Literatura Latinoamericana</field>
+        <field name="descripcion">Obras de autores latinoamericanos</field>
+        <field name="color">5</field>
+    </record>
+
+    <record id="categoria_infantil" model="biblioteca.categoria">
+        <field name="name">Infantil y Juvenil</field>
+        <field name="descripcion">Libros para niños y jóvenes</field>
+        <field name="color">6</field>
+    </record>
+
+    <!-- Secuencia para números de carnet -->
+    <record id="seq_miembro_carnet" model="ir.sequence">
+        <field name="name">Carnet de Miembro Biblioteca</field>
+        <field name="code">biblioteca.miembro.carnet</field>
+        <field name="prefix">MBR-</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>

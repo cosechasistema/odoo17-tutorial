@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    DATOS INICIALES - Tutorial 01
+
+    Estos datos se cargan automáticamente al instalar el módulo.
+    Son útiles para tener datos de ejemplo o configuraciones iniciales.
+    -->
+
+    <!-- Libros de ejemplo -->
+    <record id="libro_quijote" model="biblioteca.libro">
+        <field name="name">Don Quijote de la Mancha</field>
+        <field name="autor">Miguel de Cervantes</field>
+        <field name="isbn">9788420412146</field>
+        <field name="editorial">Alfaguara</field>
+        <field name="fecha_publicacion">1605-01-16</field>
+        <field name="paginas">1345</field>
+        <field name="precio">25.50</field>
+        <field name="descripcion">La historia del ingenioso hidalgo Don Quijote de la Mancha, considerada la primera novela moderna.</field>
+        <field name="estado">disponible</field>
+        <field name="disponible" eval="True"/>
+    </record>
+
+    <record id="libro_cien_anios" model="biblioteca.libro">
+        <field name="name">Cien Años de Soledad</field>
+        <field name="autor">Gabriel García Márquez</field>
+        <field name="isbn">9780307474728</field>
+        <field name="editorial">Vintage Español</field>
+        <field name="fecha_publicacion">1967-05-30</field>
+        <field name="paginas">471</field>
+        <field name="precio">18.99</field>
+        <field name="descripcion">La saga de la familia Buendía en el pueblo ficticio de Macondo.</field>
+        <field name="estado">disponible</field>
+        <field name="disponible" eval="True"/>
+    </record>
+
+    <record id="libro_rayuela" model="biblioteca.libro">
+        <field name="name">Rayuela</field>
+        <field name="autor">Julio Cortázar</field>
+        <field name="isbn">9788437604572</field>
+        <field name="editorial">Cátedra</field>
+        <field name="fecha_publicacion">1963-06-28</field>
+        <field name="paginas">736</field>
+        <field name="precio">15.00</field>
+        <field name="descripcion">Una novela que puede leerse de múltiples formas, revolucionando la narrativa latinoamericana.</field>
+        <field name="estado">prestado</field>
+        <field name="disponible" eval="False"/>
+    </record>
+
+    <record id="libro_borges" model="biblioteca.libro">
+        <field name="name">Ficciones</field>
+        <field name="autor">Jorge Luis Borges</field>
+        <field name="isbn">9788499089508</field>
+        <field name="editorial">Debolsillo</field>
+        <field name="fecha_publicacion">1944-01-01</field>
+        <field name="paginas">224</field>
+        <field name="precio">12.50</field>
+        <field name="descripcion">Colección de cuentos que incluye El jardín de senderos que se bifurcan y La biblioteca de Babel.</field>
+        <field name="estado">disponible</field>
+        <field name="disponible" eval="True"/>
+    </record>
+
+    <record id="libro_principito" model="biblioteca.libro">
+        <field name="name">El Principito</field>
+        <field name="autor">Antoine de Saint-Exupéry</field>
+        <field name="isbn">9788498381498</field>
+        <field name="editorial">Salamandra</field>
+        <field name="fecha_publicacion">1943-04-06</field>
+        <field name="paginas">96</field>
+        <field name="precio">9.95</field>
+        <field name="descripcion">Un clásico de la literatura que cuenta la historia de un pequeño príncipe de un asteroide.</field>
+        <field name="estado">reservado</field>
+        <field name="disponible" eval="False"/>
+    </record>
+
+</odoo>

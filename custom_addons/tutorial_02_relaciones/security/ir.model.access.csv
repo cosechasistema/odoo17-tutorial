@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_biblioteca_categoria_user,biblioteca.categoria.user,model_biblioteca_categoria,base.group_user,1,1,1,1
+access_biblioteca_miembro_user,biblioteca.miembro.user,model_biblioteca_miembro,base.group_user,1,1,1,1
+access_biblioteca_prestamo_user,biblioteca.prestamo.user,model_biblioteca_prestamo,base.group_user,1,1,1,1

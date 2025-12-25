@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Tree de Miembros -->
+    <record id="view_biblioteca_miembro_tree" model="ir.ui.view">
+        <field name="name">biblioteca.miembro.tree</field>
+        <field name="model">biblioteca.miembro</field>
+        <field name="arch" type="xml">
+            <tree string="Miembros"
+                  decoration-muted="not activo"
+                  decoration-danger="fecha_vencimiento &lt; current_date">
+                <field name="numero_carnet"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="fecha_registro"/>
+                <field name="fecha_vencimiento"/>
+                <field name="prestamos_activos"/>
+                <field name="activo" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form de Miembros -->
+    <record id="view_biblioteca_miembro_form" model="ir.ui.view">
+        <field name="name">biblioteca.miembro.form</field>
+        <field name="model">biblioteca.miembro</field>
+        <field name="arch" type="xml">
+            <form string="Miembro">
+                <header>
+                    <button name="action_renovar_membresia"
+                            string="Renovar Membresía"
+                            type="object"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_prestamos"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book">
+                            <div class="o_stat_info">
+                                <field name="prestamos_activos" class="o_stat_value"/>
+                                <span class="o_stat_text"> Activos</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Inactivo" bg_color="bg-danger"
+                            invisible="activo"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="numero_carnet"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Contacto">
+                            <field name="partner_id"
+                                   context="{'default_is_company': False}"
+                                   options="{'no_create': False}"/>
+                            <field name="name" readonly="1"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group string="Membresía">
+                            <field name="fecha_registro"/>
+                            <field name="fecha_vencimiento"/>
+                            <field name="activo"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Préstamos" name="prestamos">
+                            <field name="prestamo_ids">
+                                <tree decoration-warning="estado == 'vencido'"
+                                      decoration-success="estado == 'devuelto'">
+                                    <field name="libro_id"/>
+                                    <field name="fecha_prestamo"/>
+                                    <field name="fecha_devolucion_esperada"/>
+                                    <field name="fecha_devolucion_real"/>
+                                    <field name="estado" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="notas" placeholder="Notas sobre el miembro..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Search -->
+    <record id="view_biblioteca_miembro_search" model="ir.ui.view">
+        <field name="name">biblioteca.miembro.search</field>
+        <field name="model">biblioteca.miembro</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="numero_carnet"/>
+                <field name="email"/>
+                <filter string="Activos" name="filter_activos" domain="[('activo', '=', True)]"/>
+                <filter string="Membresía Vencida" name="filter_vencidos"
+                        domain="[('fecha_vencimiento', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Con Préstamos Activos" name="filter_prestamos"
+                        domain="[('prestamos_activos', '>', 0)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_biblioteca_miembro" model="ir.actions.act_window">
+        <field name="name">Miembros</field>
+        <field name="res_model">biblioteca.miembro</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_biblioteca_miembro_search"/>
+        <field name="context">{'search_default_filter_activos': 1}</field>
+    </record>
+</odoo>

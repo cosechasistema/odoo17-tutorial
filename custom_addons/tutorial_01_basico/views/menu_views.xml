@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    ACCIONES Y MENÚS - Tutorial 01
+
+    Las acciones definen qué hacer cuando el usuario hace clic en un menú.
+    Los menús organizan la navegación de la aplicación.
+    -->
+
+    <!-- ============================================================ -->
+    <!-- ACCIÓN DE VENTANA                                            -->
+    <!-- ============================================================ -->
+    <!--
+    ir.actions.act_window: Abre una vista de un modelo.
+    Es la acción más común en Odoo.
+    -->
+    <record id="action_biblioteca_libro" model="ir.actions.act_window">
+        <field name="name">Libros</field>
+        <field name="res_model">biblioteca.libro</field>
+        <!--
+        view_mode: tipos de vista disponibles, separados por coma
+        El primero es el que se muestra por defecto
+        -->
+        <field name="view_mode">tree,form,kanban</field>
+        <!--
+        Referencia a la vista de búsqueda
+        -->
+        <field name="search_view_id" ref="view_biblioteca_libro_search"/>
+        <!--
+        context: valores por defecto al crear nuevos registros
+        -->
+        <field name="context">{'default_disponible': True}</field>
+        <!--
+        domain: filtro que se aplica siempre (vacío = todos los registros)
+        -->
+        <field name="domain">[]</field>
+        <!--
+        help: mensaje cuando no hay registros
+        -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Crea tu primer libro!
+            </p>
+            <p>
+                Haz clic en el botón "Nuevo" para agregar un libro a la biblioteca.
+                Puedes registrar el título, autor, ISBN y más información.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- MENÚS                                                         -->
+    <!-- ============================================================ -->
+
+    <!--
+    Menú raíz (aparece en la barra superior)
+    sequence: orden de aparición (menor = más a la izquierda)
+    web_icon: icono para Odoo Enterprise (ignorado en Community)
+    -->
+    <menuitem id="menu_biblioteca_root"
+              name="Biblioteca"
+              sequence="50"/>
+
+    <!--
+    Submenú de primer nivel
+    parent: menú padre
+    -->
+    <menuitem id="menu_biblioteca_catalogo"
+              name="Catálogo"
+              parent="menu_biblioteca_root"
+              sequence="10"/>
+
+    <!--
+    Menú que ejecuta la acción (el que realmente abre la vista)
+    action: referencia a la acción a ejecutar
+    -->
+    <menuitem id="menu_biblioteca_libro"
+              name="Libros"
+              parent="menu_biblioteca_catalogo"
+              action="action_biblioteca_libro"
+              sequence="10"/>
+
+    <!-- ============================================================ -->
+    <!-- ACCIONES ADICIONALES (Ejemplo)                               -->
+    <!-- ============================================================ -->
+
+    <!--
+    Acción con filtro predefinido: Solo libros disponibles
+    -->
+    <record id="action_biblioteca_libro_disponibles" model="ir.actions.act_window">
+        <field name="name">Libros Disponibles</field>
+        <field name="res_model">biblioteca.libro</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('disponible', '=', True)]</field>
+        <field name="context">{'search_default_filter_disponibles': 1}</field>
+    </record>
+
+    <menuitem id="menu_biblioteca_libro_disponibles"
+              name="Disponibles"
+              parent="menu_biblioteca_catalogo"
+              action="action_biblioteca_libro_disponibles"
+              sequence="20"/>
+
+    <!--
+    Acción con vista kanban por defecto
+    -->
+    <record id="action_biblioteca_libro_kanban" model="ir.actions.act_window">
+        <field name="name">Libros (Kanban)</field>
+        <field name="res_model">biblioteca.libro</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem id="menu_biblioteca_libro_kanban"
+              name="Vista Kanban"
+              parent="menu_biblioteca_catalogo"
+              action="action_biblioteca_libro_kanban"
+              sequence="30"/>
+
+</odoo>

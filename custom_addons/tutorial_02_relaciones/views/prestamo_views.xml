@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Tree de Préstamos -->
+    <record id="view_biblioteca_prestamo_tree" model="ir.ui.view">
+        <field name="name">biblioteca.prestamo.tree</field>
+        <field name="model">biblioteca.prestamo</field>
+        <field name="arch" type="xml">
+            <tree string="Préstamos"
+                  decoration-danger="estado == 'vencido'"
+                  decoration-success="estado == 'devuelto'"
+                  default_order="fecha_prestamo desc">
+                <field name="libro_id"/>
+                <field name="miembro_id"/>
+                <field name="fecha_prestamo"/>
+                <field name="fecha_devolucion_esperada"/>
+                <field name="fecha_devolucion_real"/>
+                <field name="dias_retraso"
+                       decoration-danger="dias_retraso > 0"/>
+                <field name="estado"
+                       widget="badge"
+                       decoration-success="estado == 'devuelto'"
+                       decoration-warning="estado == 'activo'"
+                       decoration-danger="estado == 'vencido'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form de Préstamos -->
+    <record id="view_biblioteca_prestamo_form" model="ir.ui.view">
+        <field name="name">biblioteca.prestamo.form</field>
+        <field name="model">biblioteca.prestamo</field>
+        <field name="arch" type="xml">
+            <form string="Préstamo">
+                <header>
+                    <button name="action_devolver"
+                            string="Devolver Libro"
+                            type="object"
+                            class="btn-primary"
+                            invisible="estado != 'activo'"/>
+                    <button name="action_renovar"
+                            string="Renovar"
+                            type="object"
+                            invisible="estado != 'activo' or dias_retraso > 0"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Vencido" bg_color="bg-danger"
+                            invisible="estado != 'vencido'"/>
+
+                    <group>
+                        <group string="Libro">
+                            <field name="libro_id"
+                                   options="{'no_create': True}"
+                                   readonly="estado != 'activo'"/>
+                            <field name="libro_titulo" invisible="1"/>
+                            <field name="libro_autor"/>
+                        </group>
+                        <group string="Miembro">
+                            <field name="miembro_id"
+                                   options="{'no_create': True}"
+                                   readonly="estado != 'activo'"/>
+                            <field name="miembro_email"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Fechas">
+                            <field name="fecha_prestamo"/>
+                            <field name="dias_prestamo"/>
+                            <field name="fecha_devolucion_esperada"/>
+                        </group>
+                        <group string="Devolución">
+                            <field name="fecha_devolucion_real"/>
+                            <field name="dias_retraso"
+                                   decoration-danger="dias_retraso > 0"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Notas" name="notas">
+                            <field name="notas"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Search -->
+    <record id="view_biblioteca_prestamo_search" model="ir.ui.view">
+        <field name="name">biblioteca.prestamo.search</field>
+        <field name="model">biblioteca.prestamo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="libro_id"/>
+                <field name="miembro_id"/>
+                <separator/>
+                <filter string="Activos" name="filter_activos" domain="[('estado', '=', 'activo')]"/>
+                <filter string="Vencidos" name="filter_vencidos" domain="[('estado', '=', 'vencido')]"/>
+                <filter string="Devueltos" name="filter_devueltos" domain="[('estado', '=', 'devuelto')]"/>
+                <separator/>
+                <filter string="Con Retraso" name="filter_retraso" domain="[('dias_retraso', '>', 0)]"/>
+                <separator/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Estado" name="group_estado" context="{'group_by': 'estado'}"/>
+                    <filter string="Miembro" name="group_miembro" context="{'group_by': 'miembro_id'}"/>
+                    <filter string="Libro" name="group_libro" context="{'group_by': 'libro_id'}"/>
+                    <filter string="Mes" name="group_mes" context="{'group_by': 'fecha_prestamo:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_biblioteca_prestamo" model="ir.actions.act_window">
+        <field name="name">Préstamos</field>
+        <field name="res_model">biblioteca.prestamo</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_biblioteca_prestamo_search"/>
+        <field name="context">{'search_default_filter_activos': 1}</field>
+    </record>
+</odoo>

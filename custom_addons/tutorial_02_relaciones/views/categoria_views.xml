@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Tree de Categorías -->
+    <record id="view_biblioteca_categoria_tree" model="ir.ui.view">
+        <field name="name">biblioteca.categoria.tree</field>
+        <field name="model">biblioteca.categoria</field>
+        <field name="arch" type="xml">
+            <tree string="Categorías">
+                <field name="name"/>
+                <field name="libro_count"/>
+                <field name="descripcion"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form de Categorías -->
+    <record id="view_biblioteca_categoria_form" model="ir.ui.view">
+        <field name="name">biblioteca.categoria.form</field>
+        <field name="model">biblioteca.categoria</field>
+        <field name="arch" type="xml">
+            <form string="Categoría">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_libros"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book">
+                            <field name="libro_count" widget="statinfo" string="Libros"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Libros" name="libros">
+                            <field name="libro_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="autor"/>
+                                    <field name="estado"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_biblioteca_categoria" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">biblioteca.categoria</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
