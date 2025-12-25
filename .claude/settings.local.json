@@ -6,8 +6,10 @@
         "run",
         "-i",
         "--rm",
-        "--network", "host",
-        "-e", "DATABASE_URI",
+        "--network",
+        "host",
+        "-e",
+        "DATABASE_URI",
         "crystaldba/postgres-mcp",
         "--access-mode=unrestricted"
       ],
@@ -15,5 +17,11 @@
         "DATABASE_URI": "postgresql://odoo:odoo@localhost:5433/postgres"
       }
     }
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAgregar documentación de inicio y guía de uso de Odoo\n\n- README.md: Instrucciones completas de inicio rápido\n- docs/COMO_USAR_ODOO.md: Guía para principiantes sobre cómo usar módulos\n- CLAUDE.md: Actualizado con referencias a nueva documentación\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
+    ]
   }
 }
