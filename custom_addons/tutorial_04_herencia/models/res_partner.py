@@ -219,3 +219,23 @@ class BibliotecaSocio(models.Model):
                     'biblioteca.socio'
                 ) or 'SOC-0001'
         return super().create(vals_list)
+
+
+# =====================================================
+# EXTENSIÓN DE LIBRO PARA AGREGAR autor_id
+# =====================================================
+
+class LibroAutor(models.Model):
+    """
+    Extensión del modelo biblioteca.libro para agregar relación con autor.
+    Necesario para que funcione el One2many en res.partner.
+    """
+    _inherit = 'biblioteca.libro'
+
+    # Campo Many2one que vincula libro con autor (res.partner)
+    autor_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Autor',
+        domain=[('es_autor', '=', True)],
+        help='Autor del libro (debe estar marcado como autor)',
+    )

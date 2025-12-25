@@ -20,6 +20,7 @@
     'category': 'Tutorial',
     'depends': ['tutorial_01_basico', 'contacts'],
     'data': [
+        'security/ir.model.access.csv',
         'views/partner_views.xml',
         'data/partner_data.xml',
     ],
