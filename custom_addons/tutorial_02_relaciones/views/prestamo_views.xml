@@ -99,8 +99,6 @@
                 <filter string="Vencidos" name="filter_vencidos" domain="[('estado', '=', 'vencido')]"/>
                 <filter string="Devueltos" name="filter_devueltos" domain="[('estado', '=', 'devuelto')]"/>
                 <separator/>
-                <filter string="Con Retraso" name="filter_retraso" domain="[('dias_retraso', '>', 0)]"/>
-                <separator/>
                 <group expand="0" string="Agrupar Por">
                     <filter string="Estado" name="group_estado" context="{'group_by': 'estado'}"/>
                     <filter string="Miembro" name="group_miembro" context="{'group_by': 'miembro_id'}"/>

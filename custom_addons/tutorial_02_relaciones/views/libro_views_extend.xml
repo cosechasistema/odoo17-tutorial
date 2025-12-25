@@ -13,38 +13,29 @@
         <field name="model">biblioteca.libro</field>
         <field name="inherit_id" ref="tutorial_01_basico.view_biblioteca_libro_form"/>
         <field name="arch" type="xml">
-            <!-- Agregar botones de estadísticas -->
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_ver_prestamos"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-history">
-                    <field name="prestamo_count" widget="statinfo" string="Préstamos"/>
-                </button>
-                <button name="action_crear_prestamo"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-plus"
-                        invisible="not disponible">
-                    <span>Nuevo Préstamo</span>
-                </button>
+            <!-- Crear button_box antes de la imagen -->
+            <xpath expr="//field[@name='portada']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_ver_prestamos"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-history">
+                        <field name="prestamo_count" widget="statinfo" string="Préstamos"/>
+                    </button>
+                    <button name="action_crear_prestamo"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-plus"
+                            invisible="not disponible">
+                        <span>Nuevo Préstamo</span>
+                    </button>
+                </div>
             </xpath>
 
-            <!-- Si no existe button_box, crearlo -->
-            <xpath expr="//sheet" position="inside">
-                <div class="oe_button_box" name="button_box" position="move"/>
-            </xpath>
-
-            <!-- Agregar campo de categorías después del grupo de información -->
-            <xpath expr="//group/group[@string='Información General']" position="after">
-                <group string="Clasificación">
-                    <field name="categoria_ids" widget="many2many_tags"
-                           options="{'color_field': 'color'}"/>
-                </group>
-            </xpath>
-
-            <!-- Agregar información de préstamo actual si está prestado -->
-            <xpath expr="//group/group[@string='Precio y Disponibilidad']" position="inside">
+            <!-- Agregar campo de categorías después del campo disponible -->
+            <xpath expr="//field[@name='disponible']" position="after">
+                <field name="categoria_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}"/>
                 <field name="prestado_a" invisible="disponible"/>
             </xpath>
 

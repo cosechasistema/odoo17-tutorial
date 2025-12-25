@@ -177,7 +177,7 @@ class Prestamo(models.Model):
     @api.onchange('miembro_id')
     def _onchange_miembro(self):
         """Verificar estado del miembro."""
-        if self.miembro_id:
+        if self.miembro_id and self.miembro_id.fecha_vencimiento:
             if self.miembro_id.fecha_vencimiento < fields.Date.today():
                 return {
                     'warning': {

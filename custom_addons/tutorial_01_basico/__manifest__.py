@@ -16,7 +16,7 @@
         Ejemplo práctico: Sistema de gestión de libros para una biblioteca.
     """,
     'author': 'Tutorial Odoo',
-    'website': 'https://github.com/tu-usuario',
+    'website': '',
     'license': 'LGPL-3',
     'category': 'Tutorial',
 

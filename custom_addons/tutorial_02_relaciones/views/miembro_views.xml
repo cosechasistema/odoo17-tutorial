@@ -104,8 +104,6 @@
                 <filter string="Activos" name="filter_activos" domain="[('activo', '=', True)]"/>
                 <filter string="Membresía Vencida" name="filter_vencidos"
                         domain="[('fecha_vencimiento', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Con Préstamos Activos" name="filter_prestamos"
-                        domain="[('prestamos_activos', '>', 0)]"/>
             </search>
         </field>
     </record>
