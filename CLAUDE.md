@@ -125,6 +125,8 @@ mi_modulo/
 
 ## Documentación
 
+- `docs/COMO_USAR_ODOO.md` - Guía para principiantes (cómo usar módulos)
 - `docs/GUIA_DESARROLLO.md` - Guía completa de desarrollo Odoo
 - `docs/ORM_PARA_DESARROLLADORES_SQL.md` - Comparativa ORM vs SQL
 - `docs/COMANDOS_REFERENCIA.md` - Comandos Docker y Odoo
+- `docs/CONFIGURAR_MCP.md` - Configurar MCP PostgreSQL para Claude Code
