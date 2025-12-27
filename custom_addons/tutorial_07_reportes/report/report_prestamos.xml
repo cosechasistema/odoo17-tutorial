@@ -172,9 +172,14 @@
                     Agrega clases CSS según condiciones
                     -->
                     <tr t-att-class="'table-danger' if prestamo.estado == 'vencido' else ''">
-                        <td t-field="prestamo.libro_id.name"/>
-                        <td t-field="prestamo.miembro_id.name"/>
-                        <td t-field="prestamo.fecha_prestamo"/>
+                        <!--
+                        IMPORTANTE: t-field NO funciona directamente en <td>
+                        Usar <span t-field="..."/> dentro del <td>
+                        o usar t-esc para valores simples
+                        -->
+                        <td><span t-esc="prestamo.libro_id.name"/></td>
+                        <td><span t-esc="prestamo.miembro_id.name"/></td>
+                        <td><span t-field="prestamo.fecha_prestamo"/></td>
                         <td>
                             <t t-if="prestamo.fecha_devolucion_real">
                                 <span t-field="prestamo.fecha_devolucion_real"/>

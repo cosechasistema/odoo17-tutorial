@@ -100,7 +100,7 @@
                                     <td>
                                         <strong t-field="libro.name"/>
                                     </td>
-                                    <td t-field="libro.autor"/>
+                                    <td><span t-esc="libro.autor or '-'"/></td>
                                     <td>
                                         <t t-if="libro.isbn">
                                             <code t-field="libro.isbn"/>
@@ -109,7 +109,7 @@
                                             <em class="text-muted">-</em>
                                         </t>
                                     </td>
-                                    <td class="text-end" t-field="libro.paginas"/>
+                                    <td class="text-end"><span t-esc="libro.paginas or '-'"/></td>
                                     <td class="text-end">
                                         <span t-field="libro.precio"
                                               t-options='{"widget": "monetary", "display_currency": libro.currency_id}'/>
