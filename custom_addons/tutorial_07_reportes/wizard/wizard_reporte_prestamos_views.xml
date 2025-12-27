@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    WIZARD PARA REPORTE DE PRÉSTAMOS - Tutorial 07
+
+    Este wizard permite al usuario seleccionar filtros
+    antes de generar el reporte de préstamos.
+    -->
+
+    <!-- Vista Form del Wizard -->
+    <record id="view_wizard_reporte_prestamos_form" model="ir.ui.view">
+        <field name="name">biblioteca.wizard.reporte.prestamos.form</field>
+        <field name="model">biblioteca.wizard.reporte.prestamos</field>
+        <field name="arch" type="xml">
+            <form string="Generar Reporte de Préstamos">
+                <group>
+                    <group string="Filtros">
+                        <field name="miembro_id"
+                               options="{'no_create': True}"
+                               placeholder="Todos los miembros"/>
+                        <field name="estado"/>
+                    </group>
+                    <group string="Rango de Fechas">
+                        <field name="fecha_desde"/>
+                        <field name="fecha_hasta"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Opciones">
+                        <field name="agrupar_por"/>
+                        <field name="mostrar_totales"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generar_reporte"
+                            string="Generar PDF"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="action_vista_previa"
+                            string="Vista Previa"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el Wizard -->
+    <record id="action_wizard_reporte_prestamos" model="ir.actions.act_window">
+        <field name="name">Reporte de Préstamos</field>
+        <field name="res_model">biblioteca.wizard.reporte.prestamos</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

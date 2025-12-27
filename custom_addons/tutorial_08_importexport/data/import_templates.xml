@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    PLANTILLAS Y DATOS INICIALES - Tutorial 08
+
+    Este archivo puede contener:
+    - Secuencias para logs
+    - Plantillas de ejemplo
+    - Configuraciones por defecto
+    -->
+
+    <!-- Secuencia para logs de importación -->
+    <record id="seq_import_log" model="ir.sequence">
+        <field name="name">Log de Importación</field>
+        <field name="code">biblioteca.import.log</field>
+        <field name="prefix">IMP-</field>
+        <field name="padding">5</field>
+    </record>
+
+</odoo>

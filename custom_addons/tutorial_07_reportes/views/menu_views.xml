@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    MENÚS PARA REPORTES - Tutorial 07
+
+    Organiza los reportes en un menú dedicado
+    bajo la sección de Biblioteca.
+    -->
+
+    <!-- Menú principal de Reportes -->
+    <menuitem
+        id="menu_biblioteca_reportes"
+        name="Reportes"
+        parent="tutorial_01_basico.menu_biblioteca_root"
+        sequence="50"
+    />
+
+    <!-- Submenú: Reportes de Libros -->
+    <menuitem
+        id="menu_reportes_libros"
+        name="Reportes de Libros"
+        parent="menu_biblioteca_reportes"
+        sequence="10"
+    />
+
+    <!-- Acción para abrir wizard de catálogo -->
+    <record id="action_open_catalogo" model="ir.actions.act_window">
+        <field name="name">Imprimir Catálogo</field>
+        <field name="res_model">biblioteca.libro</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Seleccione libros y use Imprimir → Catálogo
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_imprimir_catalogo"
+        name="Catálogo de Libros"
+        parent="menu_reportes_libros"
+        action="action_open_catalogo"
+        sequence="10"
+    />
+
+    <!-- Submenú: Reportes de Préstamos -->
+    <menuitem
+        id="menu_reportes_prestamos"
+        name="Reportes de Préstamos"
+        parent="menu_biblioteca_reportes"
+        sequence="20"
+    />
+
+    <!-- Acción para abrir wizard de reporte de préstamos -->
+    <menuitem
+        id="menu_wizard_reporte_prestamos"
+        name="Generar Reporte de Préstamos"
+        parent="menu_reportes_prestamos"
+        action="action_wizard_reporte_prestamos"
+        sequence="10"
+    />
+
+    <!-- Acceso directo a préstamos para reportes -->
+    <record id="action_prestamos_para_reportes" model="ir.actions.act_window">
+        <field name="name">Préstamos (para reportes)</field>
+        <field name="res_model">biblioteca.prestamo</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Seleccione préstamos y use Imprimir → Reporte
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_prestamos_reportes"
+        name="Imprimir desde Préstamos"
+        parent="menu_reportes_prestamos"
+        action="action_prestamos_para_reportes"
+        sequence="20"
+    />
+
+    <!-- Submenú: Reportes de Miembros -->
+    <menuitem
+        id="menu_reportes_miembros"
+        name="Reportes de Miembros"
+        parent="menu_biblioteca_reportes"
+        sequence="30"
+    />
+
+    <!-- Acción para imprimir carnets -->
+    <record id="action_miembros_para_carnets" model="ir.actions.act_window">
+        <field name="name">Imprimir Carnets</field>
+        <field name="res_model">biblioteca.miembro</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Seleccione miembros y use Imprimir → Carnet
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_imprimir_carnets"
+        name="Imprimir Carnets"
+        parent="menu_reportes_miembros"
+        action="action_miembros_para_carnets"
+        sequence="10"
+    />
+
+</odoo>

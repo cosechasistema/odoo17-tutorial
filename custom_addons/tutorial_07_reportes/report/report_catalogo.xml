@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    REPORTE: CATÁLOGO DE LIBROS - Tutorial 07
+
+    Genera un catálogo completo de libros en formato tabla.
+    Demuestra cómo iterar sobre múltiples registros y crear tablas.
+    -->
+
+    <!-- Definición del Reporte -->
+    <record id="action_report_catalogo" model="ir.actions.report">
+        <field name="name">Catálogo de Libros</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_catalogo_template</field>
+        <field name="report_file">tutorial_07_reportes.report_catalogo_template</field>
+        <field name="print_report_name">'Catalogo_Biblioteca_%s' % time.strftime('%Y%m%d')</field>
+        <field name="binding_model_id" ref="tutorial_01_basico.model_biblioteca_libro"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_biblioteca_a4"/>
+    </record>
+
+    <!-- Template del Catálogo -->
+    <template id="report_catalogo_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Encabezado -->
+                    <div class="text-center mb-4">
+                        <h1>Catálogo de Libros</h1>
+                        <p class="text-muted">
+                            Total de libros: <strong t-esc="len(docs)"/>
+                        </p>
+                        <hr/>
+                    </div>
+
+                    <!-- Resumen de disponibilidad -->
+                    <div class="row mb-4">
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2">
+                                <!--
+                                t-set: Define una variable
+                                filtered(): Método de recordset para filtrar
+                                -->
+                                <t t-set="disponibles" t-value="docs.filtered(lambda l: l.estado == 'disponible')"/>
+                                <h4 class="text-success" t-esc="len(disponibles)"/>
+                                <small>Disponibles</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2">
+                                <t t-set="prestados" t-value="docs.filtered(lambda l: l.estado == 'prestado')"/>
+                                <h4 class="text-danger" t-esc="len(prestados)"/>
+                                <small>Prestados</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2">
+                                <t t-set="reservados" t-value="docs.filtered(lambda l: l.estado == 'reservado')"/>
+                                <h4 class="text-warning" t-esc="len(reservados)"/>
+                                <small>Reservados</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2">
+                                <t t-set="mantenimiento" t-value="docs.filtered(lambda l: l.estado == 'mantenimiento')"/>
+                                <h4 class="text-info" t-esc="len(mantenimiento)"/>
+                                <small>Mantenimiento</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de libros -->
+                    <table class="table table-sm table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 30%;">Título</th>
+                                <th style="width: 20%;">Autor</th>
+                                <th style="width: 15%;">ISBN</th>
+                                <th style="width: 10%;">Páginas</th>
+                                <th style="width: 10%;">Precio</th>
+                                <th style="width: 10%;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--
+                            t-foreach con t-as define variables automáticas:
+                            - libro: el elemento actual
+                            - libro_index: índice (0-based)
+                            - libro_first: True si es el primero
+                            - libro_last: True si es el último
+                            - libro_odd: True si índice es impar
+                            - libro_even: True si índice es par
+                            -->
+                            <t t-foreach="docs" t-as="libro">
+                                <tr>
+                                    <!-- Número de fila (1-based) -->
+                                    <td t-esc="libro_index + 1"/>
+                                    <td>
+                                        <strong t-field="libro.name"/>
+                                    </td>
+                                    <td t-field="libro.autor"/>
+                                    <td>
+                                        <t t-if="libro.isbn">
+                                            <code t-field="libro.isbn"/>
+                                        </t>
+                                        <t t-else="">
+                                            <em class="text-muted">-</em>
+                                        </t>
+                                    </td>
+                                    <td class="text-end" t-field="libro.paginas"/>
+                                    <td class="text-end">
+                                        <span t-field="libro.precio"
+                                              t-options='{"widget": "monetary", "display_currency": libro.currency_id}'/>
+                                    </td>
+                                    <td>
+                                        <t t-if="libro.estado == 'disponible'">
+                                            <span class="badge bg-success">Disponible</span>
+                                        </t>
+                                        <t t-elif="libro.estado == 'prestado'">
+                                            <span class="badge bg-danger">Prestado</span>
+                                        </t>
+                                        <t t-elif="libro.estado == 'reservado'">
+                                            <span class="badge bg-warning">Reservado</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge bg-info">Mantenimiento</span>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <!-- Pie de tabla con totales -->
+                        <tfoot class="table-secondary">
+                            <tr>
+                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                <td class="text-end">
+                                    <!--
+                                    sum() y mapped() son métodos útiles de recordset
+                                    -->
+                                    <strong t-esc="sum(docs.mapped('paginas'))"/> pág.
+                                </td>
+                                <td class="text-end">
+                                    <strong>
+                                        <t t-esc="'${:,.2f}'.format(sum(docs.mapped('precio')))"/>
+                                    </strong>
+                                </td>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Pie de página -->
+                    <div class="mt-4 text-muted text-center" style="font-size: 10px;">
+                        <hr/>
+                        Catálogo generado el <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

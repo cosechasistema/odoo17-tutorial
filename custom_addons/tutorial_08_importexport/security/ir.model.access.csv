@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_log,biblioteca.import.log,model_biblioteca_import_log,base.group_user,1,1,1,1
+access_wizard_importar_libros,biblioteca.wizard.importar.libros,model_biblioteca_wizard_importar_libros,base.group_user,1,1,1,1
+access_wizard_importar_miembros,biblioteca.wizard.importar.miembros,model_biblioteca_wizard_importar_miembros,base.group_user,1,1,1,1
+access_wizard_exportar_datos,biblioteca.wizard.exportar.datos,model_biblioteca_wizard_exportar_datos,base.group_user,1,1,1,1

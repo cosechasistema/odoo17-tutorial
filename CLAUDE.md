@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Descripción del Proyecto
 
-Entorno de desarrollo y aprendizaje de Odoo 17 usando Docker Compose. Incluye PostgreSQL 15, pgAdmin, y 6 módulos de tutorial progresivos.
+Entorno de desarrollo y aprendizaje de Odoo 17 usando Docker Compose. Incluye PostgreSQL 15, pgAdmin, y 8 módulos de tutorial progresivos.
 
 ## Arquitectura
 
@@ -17,7 +17,9 @@ odoo17-dev/
 │   ├── tutorial_03_computed/   # Campos calculados, onchange, constraints
 │   ├── tutorial_04_herencia/   # _inherit, _inherits, herencia de vistas
 │   ├── tutorial_05_api_rest/   # Controladores HTTP y REST
-│   └── tutorial_06_testing/    # Tests unitarios y de integración
+│   ├── tutorial_06_testing/    # Tests unitarios y de integración
+│   ├── tutorial_07_reportes/   # Reportes PDF con QWeb
+│   └── tutorial_08_importexport/ # Importación/Exportación de datos
 ├── docs/                     # Documentación detallada
 ├── scripts/                  # Scripts de utilidad
 └── docker-compose.yml        # Servicios Docker
@@ -72,6 +74,8 @@ Los módulos están diseñados para aprenderse en orden:
 4. **tutorial_04_herencia**: Extender res.partner, herencia de vistas XML
 5. **tutorial_05_api_rest**: Controladores HTTP, endpoints JSON
 6. **tutorial_06_testing**: TransactionCase, fixtures, assertions
+7. **tutorial_07_reportes**: Reportes PDF con QWeb, wizards de reportes, paper formats
+8. **tutorial_08_importexport**: Importar CSV, exportar datos, logs de importación
 
 ## ORM de Odoo - Referencia Rápida
 
@@ -130,3 +134,4 @@ mi_modulo/
 - `docs/ORM_PARA_DESARROLLADORES_SQL.md` - Comparativa ORM vs SQL
 - `docs/COMANDOS_REFERENCIA.md` - Comandos Docker y Odoo
 - `docs/CONFIGURAR_MCP.md` - Configurar MCP PostgreSQL para Claude Code
+- `docs/ERRORES_COMUNES.md` - Errores frecuentes y sus soluciones (¡muy útil!)

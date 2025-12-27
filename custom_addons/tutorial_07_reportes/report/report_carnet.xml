@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    REPORTE: CARNET DE MIEMBRO - Tutorial 07
+
+    Demuestra:
+    - Reportes tipo carnet (tamaño pequeño)
+    - Múltiples carnets por página
+    - Uso de imágenes y códigos
+    - Paper format personalizado
+    -->
+
+    <!-- Acción del reporte de carnet -->
+    <record id="action_report_carnet_miembro" model="ir.actions.report">
+        <field name="name">Carnet de Miembro</field>
+        <field name="model">biblioteca.miembro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_carnet_template</field>
+        <field name="report_file">tutorial_07_reportes.report_carnet_template</field>
+        <field name="print_report_name">'Carnet_%s' % object.numero_miembro</field>
+        <field name="binding_model_id" ref="tutorial_02_relaciones.model_biblioteca_miembro"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_carnet"/>
+    </record>
+
+    <!-- Template del Carnet -->
+    <template id="report_carnet_template">
+        <!--
+        Para carnets NO usamos external_layout porque queremos
+        control total del diseño sin encabezado/pie de empresa
+        -->
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="miembro">
+                <div class="page" style="padding: 0; margin: 0;">
+                    <!--
+                    Diseño de carnet tipo tarjeta
+                    Usamos estilos inline para mayor control
+                    -->
+                    <div style="
+                        width: 85mm;
+                        height: 54mm;
+                        border: 2px solid #2c3e50;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        font-family: Arial, sans-serif;
+                        position: relative;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    ">
+                        <!-- Encabezado del carnet -->
+                        <div style="
+                            background-color: rgba(255,255,255,0.95);
+                            padding: 5px 10px;
+                            text-align: center;
+                            border-bottom: 2px solid #2c3e50;
+                        ">
+                            <h4 style="margin: 0; color: #2c3e50; font-size: 14px;">
+                                📚 BIBLIOTECA
+                            </h4>
+                            <small style="color: #7f8c8d; font-size: 9px;">
+                                Carnet de Miembro
+                            </small>
+                        </div>
+
+                        <!-- Cuerpo del carnet -->
+                        <div style="
+                            padding: 8px 10px;
+                            color: white;
+                        ">
+                            <!-- Número de miembro destacado -->
+                            <div style="
+                                background-color: rgba(255,255,255,0.2);
+                                border-radius: 4px;
+                                padding: 3px 8px;
+                                display: inline-block;
+                                margin-bottom: 5px;
+                            ">
+                                <span style="font-size: 11px; font-weight: bold;">
+                                    <t t-esc="miembro.numero_miembro"/>
+                                </span>
+                            </div>
+
+                            <!-- Nombre del miembro -->
+                            <div style="margin-bottom: 3px;">
+                                <strong style="font-size: 13px;">
+                                    <t t-esc="miembro.name"/>
+                                </strong>
+                            </div>
+
+                            <!-- Email -->
+                            <div style="font-size: 9px; opacity: 0.9;">
+                                ✉ <t t-esc="miembro.email or 'Sin email'"/>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div style="font-size: 9px; opacity: 0.9;">
+                                ☎ <t t-esc="miembro.telefono or 'Sin teléfono'"/>
+                            </div>
+                        </div>
+
+                        <!-- Pie del carnet -->
+                        <div style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            background-color: rgba(255,255,255,0.95);
+                            padding: 4px 10px;
+                            font-size: 8px;
+                            display: flex;
+                            justify-content: space-between;
+                        ">
+                            <span>
+                                <strong>Alta:</strong>
+                                <t t-esc="miembro.fecha_alta" t-options="{'widget': 'date'}"/>
+                            </span>
+                            <span>
+                                <t t-if="miembro.fecha_vencimiento">
+                                    <strong>Vence:</strong>
+                                    <t t-esc="miembro.fecha_vencimiento" t-options="{'widget': 'date'}"/>
+                                </t>
+                            </span>
+                        </div>
+
+                        <!-- Indicador de estado -->
+                        <div style="
+                            position: absolute;
+                            top: 35px;
+                            right: 5px;
+                            padding: 2px 6px;
+                            border-radius: 3px;
+                            font-size: 8px;
+                            font-weight: bold;
+                        " t-att-style="'background-color: %s; color: white;' % ('#27ae60' if miembro.activo else '#e74c3c')">
+                            <t t-if="miembro.activo">ACTIVO</t>
+                            <t t-else="">INACTIVO</t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--
+    REPORTE: CREDENCIAL CON CÓDIGO DE BARRAS
+    Versión alternativa más elaborada
+    -->
+    <record id="action_report_credencial_miembro" model="ir.actions.report">
+        <field name="name">Credencial Completa</field>
+        <field name="model">biblioteca.miembro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_credencial_template</field>
+        <field name="report_file">tutorial_07_reportes.report_credencial_template</field>
+        <field name="print_report_name">'Credencial_%s' % object.numero_miembro</field>
+        <field name="binding_model_id" ref="tutorial_02_relaciones.model_biblioteca_miembro"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_biblioteca_a4"/>
+    </record>
+
+    <template id="report_credencial_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-4">Credenciales de Miembros</h2>
+
+                    <!--
+                    Grid de credenciales (2 por fila)
+                    Útil para imprimir múltiples en una página A4
+                    -->
+                    <div class="row">
+                        <t t-foreach="docs" t-as="miembro">
+                            <div class="col-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">
+                                            📚 Biblioteca - Credencial
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <!-- Información -->
+                                            <div class="col-8">
+                                                <p class="mb-1">
+                                                    <strong>N°:</strong>
+                                                    <span class="badge bg-secondary">
+                                                        <t t-esc="miembro.numero_miembro"/>
+                                                    </span>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Nombre:</strong>
+                                                    <t t-esc="miembro.name"/>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Email:</strong>
+                                                    <t t-esc="miembro.email or '-'"/>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Tel:</strong>
+                                                    <t t-esc="miembro.telefono or '-'"/>
+                                                </p>
+                                            </div>
+                                            <!-- Estado -->
+                                            <div class="col-4 text-center">
+                                                <t t-if="miembro.activo">
+                                                    <span class="badge bg-success" style="font-size: 14px;">
+                                                        ✓ ACTIVO
+                                                    </span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge bg-danger" style="font-size: 14px;">
+                                                        ✗ INACTIVO
+                                                    </span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-muted" style="font-size: 10px;">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Alta: <t t-esc="miembro.fecha_alta" t-options="{'widget': 'date'}"/>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <t t-if="miembro.fecha_vencimiento">
+                                                    Vence: <t t-esc="miembro.fecha_vencimiento" t-options="{'widget': 'date'}"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Instrucciones de uso -->
+                    <div class="mt-4 p-3 bg-light border rounded" style="font-size: 11px;">
+                        <h6>Instrucciones:</h6>
+                        <ul class="mb-0">
+                            <li>Presente esta credencial al solicitar préstamos</li>
+                            <li>Reporte inmediatamente si pierde su credencial</li>
+                            <li>La credencial es personal e intransferible</li>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    WIZARD EXPORTAR DATOS - Tutorial 08
+    -->
+
+    <!-- Vista del Wizard -->
+    <record id="view_wizard_exportar_datos_form" model="ir.ui.view">
+        <field name="name">biblioteca.wizard.exportar.datos.form</field>
+        <field name="model">biblioteca.wizard.exportar.datos</field>
+        <field name="arch" type="xml">
+            <form string="Exportar Datos">
+                <!-- Estado Configurar -->
+                <group invisible="estado != 'configurar'">
+                    <group string="Datos a Exportar">
+                        <field name="modelo" widget="radio"/>
+                    </group>
+
+                    <group string="Opciones">
+                        <field name="delimitador"/>
+                        <field name="incluir_ids"/>
+                    </group>
+
+                    <group string="Filtrar por Fecha de Creación">
+                        <field name="fecha_desde"/>
+                        <field name="fecha_hasta"/>
+                    </group>
+
+                    <!-- Campos de libro -->
+                    <group string="Campos a Exportar (Libros)"
+                           invisible="modelo != 'libro'">
+                        <field name="campos_libro"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <p class="text-muted">
+                            Dejar vacío para exportar campos por defecto:
+                            name, isbn, autor, editorial, paginas, precio, estado
+                        </p>
+                    </group>
+
+                    <!-- Campos de miembro -->
+                    <group string="Campos a Exportar (Miembros)"
+                           invisible="modelo != 'miembro'">
+                        <field name="campos_miembro"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <p class="text-muted">
+                            Dejar vacío para exportar campos por defecto:
+                            name, numero_miembro, email, telefono, activo
+                        </p>
+                    </group>
+
+                    <!-- Campos de préstamo -->
+                    <group string="Campos a Exportar (Préstamos)"
+                           invisible="modelo != 'prestamo'">
+                        <field name="campos_prestamo"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <p class="text-muted">
+                            Dejar vacío para exportar campos por defecto:
+                            libro_id, miembro_id, fecha_prestamo, fecha_devolucion_esperada, estado
+                        </p>
+                    </group>
+                </group>
+
+                <!-- Estado Descarga -->
+                <group invisible="estado != 'descarga'">
+                    <group string="Archivo Generado">
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">¡Exportación completada!</h4>
+                            <p>El archivo ha sido generado correctamente.</p>
+                            <hr/>
+                            <p class="mb-0">
+                                Archivo: <strong><field name="archivo_nombre" readonly="1"/></strong>
+                            </p>
+                        </div>
+                    </group>
+                </group>
+
+                <field name="estado" invisible="1"/>
+                <field name="archivo" invisible="1"/>
+
+                <footer>
+                    <!-- Botones estado configurar -->
+                    <button string="Exportar"
+                            type="object"
+                            name="action_exportar"
+                            class="btn-primary"
+                            invisible="estado != 'configurar'"/>
+
+                    <!-- Botones estado descarga -->
+                    <button string="Descargar Archivo"
+                            type="object"
+                            name="action_descargar"
+                            class="btn-primary"
+                            invisible="estado != 'descarga'"/>
+                    <button string="Nueva Exportación"
+                            type="object"
+                            name="action_nueva_exportacion"
+                            class="btn-secondary"
+                            invisible="estado != 'descarga'"/>
+
+                    <button string="Cerrar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el wizard -->
+    <record id="action_wizard_exportar_datos" model="ir.actions.act_window">
+        <field name="name">Exportar Datos</field>
+        <field name="res_model">biblioteca.wizard.exportar.datos</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

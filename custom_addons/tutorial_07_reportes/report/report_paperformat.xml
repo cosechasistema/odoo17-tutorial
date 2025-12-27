@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    FORMATOS DE PAPEL - Tutorial 07
+
+    Define formatos de papel personalizados para los reportes.
+    Odoo usa estos formatos para generar PDFs con wkhtmltopdf.
+    -->
+
+    <!-- Formato A4 personalizado para reportes de biblioteca -->
+    <record id="paperformat_biblioteca_a4" model="report.paperformat">
+        <field name="name">Biblioteca A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Formato pequeño para carnets (tipo credencial) -->
+    <record id="paperformat_carnet" model="report.paperformat">
+        <field name="name">Carnet de Miembro</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">54</field>
+        <field name="page_width">86</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">150</field>
+    </record>
+
+</odoo>

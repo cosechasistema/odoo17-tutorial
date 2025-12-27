@@ -1,0 +1,349 @@
+/*
+ * ESTILOS PARA REPORTES PDF - Tutorial 07
+ *
+ * Estos estilos se aplican a los reportes QWeb PDF.
+ * Se cargan a través del asset 'web.report_assets_common'.
+ *
+ * NOTA: Los reportes PDF usan wkhtmltopdf que tiene
+ * soporte limitado de CSS. Evitar:
+ * - Flexbox avanzado
+ * - CSS Grid
+ * - Variables CSS
+ * - Algunas pseudo-clases
+ */
+
+/* =====================================================
+   ESTILOS GENERALES
+   ===================================================== */
+
+.report-biblioteca {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+}
+
+.report-biblioteca h1 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.report-biblioteca h2 {
+    color: #34495e;
+    margin-top: 20px;
+}
+
+.report-biblioteca h3 {
+    color: #7f8c8d;
+}
+
+/* =====================================================
+   TABLAS DE REPORTES
+   ===================================================== */
+
+.report-biblioteca table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.report-biblioteca table th {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.report-biblioteca table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.report-biblioteca table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.report-biblioteca table tr:hover {
+    background-color: #ecf0f1;
+}
+
+/* Tabla con bordes */
+.report-biblioteca table.bordered {
+    border: 1px solid #bdc3c7;
+}
+
+.report-biblioteca table.bordered th,
+.report-biblioteca table.bordered td {
+    border: 1px solid #bdc3c7;
+}
+
+/* =====================================================
+   BADGES Y ETIQUETAS
+   ===================================================== */
+
+.report-biblioteca .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.report-biblioteca .badge-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.report-biblioteca .badge-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.report-biblioteca .badge-warning {
+    background-color: #f39c12;
+    color: white;
+}
+
+.report-biblioteca .badge-info {
+    background-color: #3498db;
+    color: white;
+}
+
+.report-biblioteca .badge-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+/* =====================================================
+   PANELES DE ESTADÍSTICAS
+   ===================================================== */
+
+.report-biblioteca .stat-panel {
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.report-biblioteca .stat-panel .stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.report-biblioteca .stat-panel .stat-label {
+    font-size: 11px;
+    color: #7f8c8d;
+    text-transform: uppercase;
+}
+
+.report-biblioteca .stat-panel.success {
+    border-color: #27ae60;
+    background-color: #e8f8f5;
+}
+
+.report-biblioteca .stat-panel.danger {
+    border-color: #e74c3c;
+    background-color: #fdedec;
+}
+
+.report-biblioteca .stat-panel.info {
+    border-color: #3498db;
+    background-color: #ebf5fb;
+}
+
+/* =====================================================
+   FICHA DE LIBRO
+   ===================================================== */
+
+.report-biblioteca .ficha-libro {
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.report-biblioteca .ficha-libro .header {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+}
+
+.report-biblioteca .ficha-libro .body {
+    padding: 15px;
+}
+
+.report-biblioteca .ficha-libro .footer {
+    background-color: #ecf0f1;
+    padding: 10px 15px;
+    font-size: 10px;
+    color: #7f8c8d;
+}
+
+/* =====================================================
+   CARNET DE MIEMBRO
+   ===================================================== */
+
+.report-biblioteca .carnet {
+    width: 85mm;
+    height: 54mm;
+    border: 2px solid #2c3e50;
+    border-radius: 8px;
+    overflow: hidden;
+    page-break-inside: avoid;
+}
+
+.report-biblioteca .carnet .header {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.report-biblioteca .carnet .body {
+    padding: 10px;
+}
+
+.report-biblioteca .carnet .footer {
+    background-color: #ecf0f1;
+    padding: 5px 10px;
+    font-size: 9px;
+}
+
+/* =====================================================
+   UTILIDADES
+   ===================================================== */
+
+/* Alineación de texto */
+.report-biblioteca .text-center {
+    text-align: center;
+}
+
+.report-biblioteca .text-right {
+    text-align: right;
+}
+
+.report-biblioteca .text-left {
+    text-align: left;
+}
+
+/* Colores de texto */
+.report-biblioteca .text-muted {
+    color: #95a5a6;
+}
+
+.report-biblioteca .text-success {
+    color: #27ae60;
+}
+
+.report-biblioteca .text-danger {
+    color: #e74c3c;
+}
+
+.report-biblioteca .text-warning {
+    color: #f39c12;
+}
+
+/* Márgenes */
+.report-biblioteca .mt-1 { margin-top: 5px; }
+.report-biblioteca .mt-2 { margin-top: 10px; }
+.report-biblioteca .mt-3 { margin-top: 15px; }
+.report-biblioteca .mt-4 { margin-top: 20px; }
+
+.report-biblioteca .mb-1 { margin-bottom: 5px; }
+.report-biblioteca .mb-2 { margin-bottom: 10px; }
+.report-biblioteca .mb-3 { margin-bottom: 15px; }
+.report-biblioteca .mb-4 { margin-bottom: 20px; }
+
+/* Padding */
+.report-biblioteca .p-1 { padding: 5px; }
+.report-biblioteca .p-2 { padding: 10px; }
+.report-biblioteca .p-3 { padding: 15px; }
+.report-biblioteca .p-4 { padding: 20px; }
+
+/* Bordes */
+.report-biblioteca .border {
+    border: 1px solid #bdc3c7;
+}
+
+.report-biblioteca .border-top {
+    border-top: 1px solid #bdc3c7;
+}
+
+.report-biblioteca .border-bottom {
+    border-bottom: 1px solid #bdc3c7;
+}
+
+/* Fondos */
+.report-biblioteca .bg-light {
+    background-color: #f8f9fa;
+}
+
+.report-biblioteca .bg-white {
+    background-color: white;
+}
+
+/* =====================================================
+   CONTROL DE PAGINACIÓN
+   ===================================================== */
+
+.report-biblioteca .page-break-before {
+    page-break-before: always;
+}
+
+.report-biblioteca .page-break-after {
+    page-break-after: always;
+}
+
+.report-biblioteca .no-page-break {
+    page-break-inside: avoid;
+}
+
+/* =====================================================
+   ENCABEZADOS DE SECCIÓN
+   ===================================================== */
+
+.report-biblioteca .section-header {
+    background-color: #34495e;
+    color: white;
+    padding: 8px 15px;
+    margin: 20px 0 10px 0;
+    border-radius: 3px;
+}
+
+.report-biblioteca .section-header h4 {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* =====================================================
+   FIRMAS Y PIE DE REPORTE
+   ===================================================== */
+
+.report-biblioteca .signature-area {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #bdc3c7;
+}
+
+.report-biblioteca .signature-line {
+    border-top: 1px solid #333;
+    width: 200px;
+    margin-top: 50px;
+    text-align: center;
+    font-size: 10px;
+    color: #7f8c8d;
+}
+
+.report-biblioteca .report-footer {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid #ecf0f1;
+    font-size: 9px;
+    color: #95a5a6;
+    text-align: center;
+}

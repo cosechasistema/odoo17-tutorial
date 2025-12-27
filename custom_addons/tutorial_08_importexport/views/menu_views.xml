@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    MENÚS DE IMPORTACIÓN/EXPORTACIÓN - Tutorial 08
+    -->
+
+    <!-- Menú principal de Importar/Exportar -->
+    <menuitem
+        id="menu_biblioteca_importexport"
+        name="Importar/Exportar"
+        parent="tutorial_01_basico.menu_biblioteca_root"
+        sequence="60"
+    />
+
+    <!-- Submenú: Importar -->
+    <menuitem
+        id="menu_importar"
+        name="Importar Datos"
+        parent="menu_biblioteca_importexport"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_importar_libros"
+        name="Importar Libros"
+        parent="menu_importar"
+        action="action_wizard_importar_libros"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_importar_miembros"
+        name="Importar Miembros"
+        parent="menu_importar"
+        action="action_wizard_importar_miembros"
+        sequence="20"
+    />
+
+    <!-- Submenú: Exportar -->
+    <menuitem
+        id="menu_exportar"
+        name="Exportar Datos"
+        parent="menu_biblioteca_importexport"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_exportar_wizard"
+        name="Exportar a CSV"
+        parent="menu_exportar"
+        action="action_wizard_exportar_datos"
+        sequence="10"
+    />
+
+    <!-- Historial -->
+    <menuitem
+        id="menu_historial_importaciones"
+        name="Historial de Importaciones"
+        parent="menu_biblioteca_importexport"
+        action="action_import_log"
+        sequence="30"
+    />
+
+</odoo>

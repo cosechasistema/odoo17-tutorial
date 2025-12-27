@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    VISTAS DE LOG DE IMPORTACIÓN - Tutorial 08
+
+    Permite ver el historial de importaciones realizadas.
+    -->
+
+    <!-- Vista Tree -->
+    <record id="view_import_log_tree" model="ir.ui.view">
+        <field name="name">biblioteca.import.log.tree</field>
+        <field name="model">biblioteca.import.log</field>
+        <field name="arch" type="xml">
+            <tree string="Log de Importaciones"
+                  decoration-success="estado == 'completado'"
+                  decoration-warning="estado == 'completado_errores'"
+                  decoration-danger="estado == 'error'">
+                <field name="nombre"/>
+                <field name="fecha"/>
+                <field name="usuario_id"/>
+                <field name="tipo"/>
+                <field name="archivo_nombre"/>
+                <field name="total_lineas"/>
+                <field name="lineas_exitosas"/>
+                <field name="lineas_error"/>
+                <field name="porcentaje_exito" widget="progressbar"/>
+                <field name="estado" widget="badge"
+                       decoration-success="estado == 'completado'"
+                       decoration-warning="estado in ['procesando', 'completado_errores']"
+                       decoration-danger="estado == 'error'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form -->
+    <record id="view_import_log_form" model="ir.ui.view">
+        <field name="name">biblioteca.import.log.form</field>
+        <field name="model">biblioteca.import.log</field>
+        <field name="arch" type="xml">
+            <form string="Log de Importación">
+                <header>
+                    <button string="Ver Registros Creados"
+                            type="object"
+                            name="action_ver_registros_creados"
+                            class="btn-primary"
+                            invisible="not registros_creados_ids"/>
+                    <field name="estado" widget="statusbar"
+                           statusbar_visible="borrador,procesando,completado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="nombre"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Información General">
+                            <field name="fecha"/>
+                            <field name="usuario_id"/>
+                            <field name="tipo"/>
+                            <field name="archivo_nombre"/>
+                        </group>
+                        <group string="Estadísticas">
+                            <field name="total_lineas"/>
+                            <field name="lineas_exitosas"/>
+                            <field name="lineas_error"/>
+                            <field name="porcentaje_exito" widget="progressbar"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Errores" invisible="not errores">
+                            <field name="errores" widget="text"/>
+                        </page>
+                        <page string="Archivo Original" invisible="not archivo_contenido">
+                            <field name="archivo_contenido" filename="archivo_nombre"/>
+                        </page>
+                        <page string="IDs Creados" invisible="not registros_creados_ids">
+                            <field name="registros_creados_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Search -->
+    <record id="view_import_log_search" model="ir.ui.view">
+        <field name="name">biblioteca.import.log.search</field>
+        <field name="model">biblioteca.import.log</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Logs">
+                <field name="nombre"/>
+                <field name="usuario_id"/>
+                <field name="archivo_nombre"/>
+                <separator/>
+                <filter string="Hoy" name="hoy"
+                        domain="[('fecha', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Esta Semana" name="semana"
+                        domain="[('fecha', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Completados" name="completados"
+                        domain="[('estado', '=', 'completado')]"/>
+                <filter string="Con Errores" name="con_errores"
+                        domain="[('estado', 'in', ['completado_errores', 'error'])]"/>
+                <separator/>
+                <filter string="Libros" name="libros"
+                        domain="[('tipo', '=', 'libro')]"/>
+                <filter string="Miembros" name="miembros"
+                        domain="[('tipo', '=', 'miembro')]"/>
+                <filter string="Préstamos" name="prestamos"
+                        domain="[('tipo', '=', 'prestamo')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Usuario" name="group_usuario"
+                            context="{'group_by': 'usuario_id'}"/>
+                    <filter string="Tipo" name="group_tipo"
+                            context="{'group_by': 'tipo'}"/>
+                    <filter string="Estado" name="group_estado"
+                            context="{'group_by': 'estado'}"/>
+                    <filter string="Fecha" name="group_fecha"
+                            context="{'group_by': 'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_import_log" model="ir.actions.act_window">
+        <field name="name">Historial de Importaciones</field>
+        <field name="res_model">biblioteca.import.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_import_log_search"/>
+        <field name="context">{'search_default_hoy': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay importaciones registradas
+            </p>
+            <p>
+                Use los wizards de importación para cargar datos masivamente.
+            </p>
+        </field>
+    </record>
+
+</odoo>

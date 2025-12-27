@@ -367,12 +367,33 @@ docker compose ps
 docker compose down && docker compose up -d
 ```
 
-### Error de permisos en custom_addons
+### Error de permisos en custom_addons (PermissionError)
 
-```bash
-# Dar permisos
-chmod -R 755 custom_addons/
+**Síntoma:** Odoo muestra error 500 y en los logs aparece:
 ```
+PermissionError: [Errno 13] Permission denied: '/mnt/extra-addons/mi_modulo/__manifest__.py'
+```
+
+**Causa:** Los archivos del módulo no tienen permisos de lectura para el usuario del contenedor Docker (normalmente UID 101 o 1000).
+
+**Solución:**
+```bash
+# Opción 1: Dar permisos a todos los módulos
+chmod -R 755 custom_addons/
+
+# Opción 2: Dar permisos a un módulo específico
+chmod -R 755 custom_addons/nombre_modulo/
+
+# Después reiniciar Odoo
+docker compose restart odoo
+```
+
+**Prevención:** Cada vez que crees un módulo nuevo (manualmente o con scripts), ejecuta:
+```bash
+chmod -R 755 custom_addons/nuevo_modulo/
+```
+
+**Nota para desarrollo:** Si usas un IDE o editor que crea archivos, verifica que los permisos por defecto sean correctos. Puedes agregar esto a tu script de creación de módulos.
 
 ### Base de datos no aparece
 

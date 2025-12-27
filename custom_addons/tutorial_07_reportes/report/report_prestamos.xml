@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    REPORTE: PRÉSTAMOS - Tutorial 07
+
+    Reporte de préstamos que puede ser invocado:
+    1. Directamente desde registros de préstamos
+    2. Desde el wizard con filtros personalizados
+
+    Demuestra:
+    - Agrupación de datos en reportes
+    - Estadísticas y cálculos
+    - Uso de datos adicionales (data dict)
+    -->
+
+    <!-- Reporte directo desde préstamos -->
+    <record id="action_report_prestamos" model="ir.actions.report">
+        <field name="name">Reporte de Préstamos</field>
+        <field name="model">biblioteca.prestamo</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_prestamos_template</field>
+        <field name="report_file">tutorial_07_reportes.report_prestamos_template</field>
+        <field name="print_report_name">'Prestamos_%s' % time.strftime('%Y%m%d')</field>
+        <field name="binding_model_id" ref="tutorial_02_relaciones.model_biblioteca_prestamo"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_biblioteca_a4"/>
+    </record>
+
+    <!-- Reporte desde wizard (usa el mismo template) -->
+    <record id="action_report_prestamos_wizard" model="ir.actions.report">
+        <field name="name">Reporte de Préstamos (Wizard)</field>
+        <field name="model">biblioteca.prestamo</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_prestamos_template</field>
+        <field name="report_file">tutorial_07_reportes.report_prestamos_template</field>
+        <field name="print_report_name">'Reporte_Prestamos_%s' % time.strftime('%Y%m%d_%H%M')</field>
+        <field name="paperformat_id" ref="paperformat_biblioteca_a4"/>
+    </record>
+
+    <!-- Template del Reporte de Préstamos -->
+    <template id="report_prestamos_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Encabezado -->
+                    <div class="text-center mb-4">
+                        <h1>Reporte de Préstamos</h1>
+                        <!--
+                        Mostrar filtros aplicados si viene del wizard
+                        'data' es el diccionario pasado desde el wizard
+                        -->
+                        <t t-if="data and data.get('fecha_desde')">
+                            <p class="text-muted">
+                                Período:
+                                <span t-esc="data.get('fecha_desde')"/> -
+                                <span t-esc="data.get('fecha_hasta')"/>
+                            </p>
+                        </t>
+                        <hr/>
+                    </div>
+
+                    <!-- Panel de estadísticas -->
+                    <div class="row mb-4">
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2 bg-light">
+                                <h3 t-esc="len(docs)"/>
+                                <small>Total Préstamos</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2" style="background-color: #d4edda;">
+                                <t t-set="activos" t-value="docs.filtered(lambda p: p.estado == 'activo')"/>
+                                <h3 t-esc="len(activos)"/>
+                                <small>Activos</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2" style="background-color: #f8d7da;">
+                                <t t-set="vencidos" t-value="docs.filtered(lambda p: p.estado == 'vencido')"/>
+                                <h3 t-esc="len(vencidos)"/>
+                                <small>Vencidos</small>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="border rounded p-2" style="background-color: #cce5ff;">
+                                <t t-set="devueltos" t-value="docs.filtered(lambda p: p.estado == 'devuelto')"/>
+                                <h3 t-esc="len(devueltos)"/>
+                                <small>Devueltos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verificar si hay agrupación -->
+                    <t t-if="data and data.get('agrupar_por') == 'miembro'">
+                        <!-- Agrupado por miembro -->
+                        <t t-set="miembros" t-value="docs.mapped('miembro_id')"/>
+                        <t t-foreach="miembros" t-as="miembro">
+                            <div class="mb-4">
+                                <h4 class="bg-secondary text-white p-2">
+                                    <t t-esc="miembro.name"/>
+                                    <small class="float-end">
+                                        <t t-set="prestamos_miembro" t-value="docs.filtered(lambda p: p.miembro_id == miembro)"/>
+                                        (<t t-esc="len(prestamos_miembro)"/> préstamos)
+                                    </small>
+                                </h4>
+                                <t t-call="tutorial_07_reportes.report_prestamos_table">
+                                    <t t-set="prestamos" t-value="prestamos_miembro"/>
+                                </t>
+                            </div>
+                        </t>
+                    </t>
+
+                    <t t-elif="data and data.get('agrupar_por') == 'estado'">
+                        <!-- Agrupado por estado -->
+                        <t t-foreach="['activo', 'vencido', 'devuelto']" t-as="est">
+                            <t t-set="prestamos_estado" t-value="docs.filtered(lambda p: p.estado == est)"/>
+                            <t t-if="prestamos_estado">
+                                <div class="mb-4">
+                                    <h4 class="bg-secondary text-white p-2">
+                                        Estado: <t t-esc="est.capitalize()"/>
+                                        <small class="float-end">
+                                            (<t t-esc="len(prestamos_estado)"/> préstamos)
+                                        </small>
+                                    </h4>
+                                    <t t-call="tutorial_07_reportes.report_prestamos_table">
+                                        <t t-set="prestamos" t-value="prestamos_estado"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </t>
+                    </t>
+
+                    <t t-else="">
+                        <!-- Sin agrupación -->
+                        <t t-call="tutorial_07_reportes.report_prestamos_table">
+                            <t t-set="prestamos" t-value="docs"/>
+                        </t>
+                    </t>
+
+                    <!-- Pie de página -->
+                    <div class="mt-4 text-muted text-center" style="font-size: 10px;">
+                        <hr/>
+                        Reporte generado el <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--
+    SUB-TEMPLATE: Tabla de préstamos
+
+    Los sub-templates permiten reutilizar código.
+    Se llaman con t-call y pueden recibir variables con t-set.
+    -->
+    <template id="report_prestamos_table">
+        <table class="table table-sm table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Libro</th>
+                    <th>Miembro</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Fecha Devolución</th>
+                    <th>Días Retraso</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="prestamos" t-as="prestamo">
+                    <!--
+                    t-att-class: Atributo dinámico
+                    Agrega clases CSS según condiciones
+                    -->
+                    <tr t-att-class="'table-danger' if prestamo.estado == 'vencido' else ''">
+                        <td t-field="prestamo.libro_id.name"/>
+                        <td t-field="prestamo.miembro_id.name"/>
+                        <td t-field="prestamo.fecha_prestamo"/>
+                        <td>
+                            <t t-if="prestamo.fecha_devolucion_real">
+                                <span t-field="prestamo.fecha_devolucion_real"/>
+                            </t>
+                            <t t-else="">
+                                <em class="text-muted">
+                                    Esperada: <span t-field="prestamo.fecha_devolucion_esperada"/>
+                                </em>
+                            </t>
+                        </td>
+                        <td class="text-center">
+                            <t t-if="prestamo.dias_retraso > 0">
+                                <span class="badge bg-danger">
+                                    <t t-esc="prestamo.dias_retraso"/> días
+                                </span>
+                            </t>
+                            <t t-else="">
+                                <span class="text-success">-</span>
+                            </t>
+                        </td>
+                        <td>
+                            <t t-if="prestamo.estado == 'activo'">
+                                <span class="badge bg-success">Activo</span>
+                            </t>
+                            <t t-elif="prestamo.estado == 'vencido'">
+                                <span class="badge bg-danger">Vencido</span>
+                            </t>
+                            <t t-else="">
+                                <span class="badge bg-secondary">Devuelto</span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+
+</odoo>

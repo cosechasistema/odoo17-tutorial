@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    WIZARD IMPORTAR MIEMBROS - Tutorial 08
+    -->
+
+    <!-- Vista del Wizard -->
+    <record id="view_wizard_importar_miembros_form" model="ir.ui.view">
+        <field name="name">biblioteca.wizard.importar.miembros.form</field>
+        <field name="model">biblioteca.wizard.importar.miembros</field>
+        <field name="arch" type="xml">
+            <form string="Importar Miembros">
+                <group>
+                    <group string="Archivo CSV" invisible="estado == 'resultado'">
+                        <field name="archivo" filename="archivo_nombre"/>
+                        <field name="archivo_nombre" invisible="1"/>
+                        <field name="delimitador"/>
+                        <field name="tiene_encabezado"/>
+                        <field name="formato_fecha"/>
+                        <field name="omitir_duplicados"/>
+                    </group>
+
+                    <group string="Formato del CSV" invisible="estado == 'resultado'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Columnas esperadas:</strong>
+                            <ul class="mb-0">
+                                <li><code>name</code> (requerido): Nombre del miembro</li>
+                                <li><code>email</code>: Correo electrónico</li>
+                                <li><code>telefono</code>: Número de teléfono</li>
+                                <li><code>direccion</code>: Dirección</li>
+                                <li><code>fecha_alta</code>: Fecha de alta</li>
+                            </ul>
+                        </div>
+                    </group>
+                </group>
+
+                <!-- Vista Previa -->
+                <group string="Vista Previa" invisible="estado != 'preview'">
+                    <field name="preview" widget="text" readonly="1"/>
+                </group>
+
+                <!-- Resultado -->
+                <group string="Resultado de la Importación" invisible="estado != 'resultado'">
+                    <field name="resultado" widget="text" readonly="1"/>
+                </group>
+
+                <field name="estado" invisible="1"/>
+
+                <footer>
+                    <button string="Descargar Plantilla"
+                            type="object"
+                            name="action_descargar_plantilla"
+                            class="btn-secondary"
+                            invisible="estado == 'resultado'"/>
+                    <button string="Importar"
+                            type="object"
+                            name="action_importar"
+                            class="btn-primary"
+                            invisible="estado == 'resultado'"/>
+                    <button string="Cerrar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el wizard -->
+    <record id="action_wizard_importar_miembros" model="ir.actions.act_window">
+        <field name="name">Importar Miembros</field>
+        <field name="res_model">biblioteca.wizard.importar.miembros</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    REPORTE: FICHA TÉCNICA DE LIBRO - Tutorial 07
+
+    Este reporte genera una ficha técnica PDF para uno o varios libros.
+
+    CONCEPTOS CLAVE:
+    - ir.actions.report: Define la acción del reporte
+    - t-foreach: Itera sobre registros
+    - t-field: Muestra campos con formato automático
+    - t-esc: Escapa y muestra texto
+    - t-if: Condicionales
+    - t-set: Define variables
+    -->
+
+    <!-- ============================================================ -->
+    <!-- DEFINICIÓN DEL REPORTE (ir.actions.report)                   -->
+    <!-- ============================================================ -->
+    <record id="action_report_libro_ficha" model="ir.actions.report">
+        <field name="name">Ficha Técnica del Libro</field>
+        <field name="model">biblioteca.libro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tutorial_07_reportes.report_libro_ficha_template</field>
+        <field name="report_file">tutorial_07_reportes.report_libro_ficha_template</field>
+        <field name="print_report_name">'Ficha_%s' % object.name.replace(' ', '_')</field>
+        <field name="binding_model_id" ref="tutorial_01_basico.model_biblioteca_libro"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_biblioteca_a4"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- TEMPLATE QWEB DEL REPORTE                                    -->
+    <!-- ============================================================ -->
+    <!--
+    ESTRUCTURA DE UN TEMPLATE QWEB:
+    1. t-call="web.html_container" - Contenedor HTML base
+    2. t-foreach="docs" - Itera sobre los registros seleccionados
+    3. t-call="web.external_layout" - Añade header/footer de la empresa
+    4. Contenido del reporte
+    -->
+    <template id="report_libro_ficha_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="libro">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Título del reporte -->
+                        <div class="text-center mb-4">
+                            <h1>Ficha Técnica del Libro</h1>
+                            <hr/>
+                        </div>
+
+                        <!-- Contenido principal en dos columnas -->
+                        <div class="row">
+                            <!-- Columna izquierda: Portada -->
+                            <div class="col-4 text-center">
+                                <t t-if="libro.portada">
+                                    <img t-att-src="image_data_uri(libro.portada)"
+                                         style="max-width: 200px; max-height: 300px; border: 1px solid #ddd;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="width: 200px; height: 280px; background: #f0f0f0;
+                                                display: flex; align-items: center; justify-content: center;
+                                                border: 1px solid #ddd; margin: auto;">
+                                        <span style="color: #999;">Sin portada</span>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <!-- Columna derecha: Información -->
+                            <div class="col-8">
+                                <!-- Título y autor -->
+                                <h2 t-field="libro.name"/>
+                                <h4 class="text-muted">
+                                    <span t-field="libro.autor"/>
+                                </h4>
+
+                                <table class="table table-sm mt-4">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width: 30%;">ISBN:</th>
+                                            <td>
+                                                <t t-if="libro.isbn">
+                                                    <span t-field="libro.isbn"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <em class="text-muted">No registrado</em>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Editorial:</th>
+                                            <td>
+                                                <t t-if="libro.editorial">
+                                                    <span t-field="libro.editorial"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <em class="text-muted">No especificada</em>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha de Publicación:</th>
+                                            <td>
+                                                <t t-if="libro.fecha_publicacion">
+                                                    <!--
+                                                    t-field con widget date formatea automáticamente
+                                                    según la configuración regional
+                                                    -->
+                                                    <span t-field="libro.fecha_publicacion"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <em class="text-muted">No especificada</em>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Páginas:</th>
+                                            <td>
+                                                <span t-field="libro.paginas"/> páginas
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Precio:</th>
+                                            <td>
+                                                <!--
+                                                t-field con widget monetary formatea
+                                                como moneda automáticamente
+                                                -->
+                                                <span t-field="libro.precio"
+                                                      t-options='{"widget": "monetary", "display_currency": libro.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Estado:</th>
+                                            <td>
+                                                <!--
+                                                Usar clases CSS según el estado
+                                                -->
+                                                <t t-if="libro.estado == 'disponible'">
+                                                    <span class="badge bg-success">Disponible</span>
+                                                </t>
+                                                <t t-elif="libro.estado == 'prestado'">
+                                                    <span class="badge bg-danger">Prestado</span>
+                                                </t>
+                                                <t t-elif="libro.estado == 'reservado'">
+                                                    <span class="badge bg-warning">Reservado</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge bg-info">En Mantenimiento</span>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <t t-if="libro.descripcion">
+                            <div class="mt-4">
+                                <h4>Descripción</h4>
+                                <hr/>
+                                <p t-field="libro.descripcion"/>
+                            </div>
+                        </t>
+
+                        <!-- Categorías (si el módulo tutorial_02 está instalado) -->
+                        <t t-if="libro.categoria_ids">
+                            <div class="mt-4">
+                                <h4>Categorías</h4>
+                                <hr/>
+                                <t t-foreach="libro.categoria_ids" t-as="categoria">
+                                    <span class="badge bg-secondary me-1">
+                                        <t t-esc="categoria.name"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </t>
+
+                        <!-- Pie de página con fecha de generación -->
+                        <div class="mt-5 text-muted text-center" style="font-size: 10px;">
+                            <hr/>
+                            Reporte generado el <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
