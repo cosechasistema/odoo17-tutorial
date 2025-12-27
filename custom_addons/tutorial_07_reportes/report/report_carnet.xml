@@ -111,7 +111,7 @@
                         ">
                             <span>
                                 <strong>Alta:</strong>
-                                <t t-esc="miembro.fecha_alta" t-options="{'widget': 'date'}"/>
+                                <t t-esc="miembro.fecha_registro" t-options="{'widget': 'date'}"/>
                             </span>
                             <span>
                                 <t t-if="miembro.fecha_vencimiento">
@@ -216,7 +216,7 @@
                                     <div class="card-footer text-muted" style="font-size: 10px;">
                                         <div class="row">
                                             <div class="col-6">
-                                                Alta: <t t-esc="miembro.fecha_alta" t-options="{'widget': 'date'}"/>
+                                                Alta: <t t-esc="miembro.fecha_registro" t-options="{'widget': 'date'}"/>
                                             </div>
                                             <div class="col-6 text-end">
                                                 <t t-if="miembro.fecha_vencimiento">

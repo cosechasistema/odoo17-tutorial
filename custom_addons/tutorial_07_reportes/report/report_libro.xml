@@ -123,12 +123,8 @@
                                         <tr>
                                             <th>Precio:</th>
                                             <td>
-                                                <!--
-                                                t-field con widget monetary formatea
-                                                como moneda automáticamente
-                                                -->
-                                                <span t-field="libro.precio"
-                                                      t-options='{"widget": "monetary", "display_currency": libro.currency_id}'/>
+                                                <!-- Mostrar precio formateado -->
+                                                $ <span t-esc="'%.2f' % libro.precio"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -165,18 +161,10 @@
                             </div>
                         </t>
 
-                        <!-- Categorías (si el módulo tutorial_02 está instalado) -->
-                        <t t-if="libro.categoria_ids">
-                            <div class="mt-4">
-                                <h4>Categorías</h4>
-                                <hr/>
-                                <t t-foreach="libro.categoria_ids" t-as="categoria">
-                                    <span class="badge bg-secondary me-1">
-                                        <t t-esc="categoria.name"/>
-                                    </span>
-                                </t>
-                            </div>
-                        </t>
+                        <!--
+                        Nota: El campo categoria_ids no existe en este modelo básico.
+                        Si se agrega en un tutorial futuro, descomentar esta sección.
+                        -->
 
                         <!-- Pie de página con fecha de generación -->
                         <div class="mt-5 text-muted text-center" style="font-size: 10px;">

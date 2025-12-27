@@ -111,8 +111,7 @@
                                     </td>
                                     <td class="text-end"><span t-esc="libro.paginas or '-'"/></td>
                                     <td class="text-end">
-                                        <span t-field="libro.precio"
-                                              t-options='{"widget": "monetary", "display_currency": libro.currency_id}'/>
+                                        $ <span t-esc="'%.2f' % libro.precio"/>
                                     </td>
                                     <td>
                                         <t t-if="libro.estado == 'disponible'">
