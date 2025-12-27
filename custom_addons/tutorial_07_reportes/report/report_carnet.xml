@@ -93,7 +93,7 @@
 
                             <!-- Teléfono -->
                             <div style="font-size: 9px; opacity: 0.9;">
-                                ☎ <t t-esc="miembro.telefono or 'Sin teléfono'"/>
+                                ☎ <t t-esc="miembro.phone or 'Sin teléfono'"/>
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@
                                                 </p>
                                                 <p class="mb-1">
                                                     <strong>Tel:</strong>
-                                                    <t t-esc="miembro.telefono or '-'"/>
+                                                    <t t-esc="miembro.phone or '-'"/>
                                                 </p>
                                             </div>
                                             <!-- Estado -->
